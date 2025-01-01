@@ -1,5 +1,5 @@
 import "server-only";
-import type { DbBlogPostShallow, DbBlogPostWithAuthors, Supabase } from "@lib/database/types";
+import type { DbBlogPostWithAuthors, Supabase } from "@lib/database/types";
 export { getBlogPostSlug, getBlogPostUrl } from "./helper";
 
 /** Selects a single blog post with the specified id. */
@@ -33,8 +33,11 @@ export async function searchBlogPosts(
 }
 
 /** Shallowly selects all blog posts, sorted from newest to oldest. */
-export async function getAllBlogPostsShallow(sb: Supabase): Promise<DbBlogPostShallow[] | null> {
-  const builder = sb.from("blog_posts").select(`id, created_at, title, slug`);
+export async function getAllBlogPosts(sb: Supabase): Promise<DbBlogPostWithAuthors[] | null> {
+  const builder = sb.from("blog_posts").select(`
+    id, created_at, edited_at, title, content, is_public, tags, slug,
+    authors:blog_post_authors(*, user:users(*))
+  `);
 
   return (await builder.order("created_at", { ascending: false })).data;
 }
