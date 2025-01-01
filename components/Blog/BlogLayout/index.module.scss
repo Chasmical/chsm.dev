@@ -30,14 +30,25 @@
   .container {
     justify-content: flex-end;
   }
-  .colSidebar {
+  .container.hideTocFirst {
+    .colToc {
+      display: none;
+    }
+    .colSidebar {
+      order: 3;
+    }
+  }
+  .container:not(.hideTocFirst) .colSidebar {
     display: none;
   }
   .colContent {
-    padding: 1rem 1rem 0;
+    padding: 1rem 1.5rem 0;
   }
 }
 @media (max-width: 768px) {
+  .colSidebar {
+    display: none;
+  }
   .colToc {
     display: none;
   }

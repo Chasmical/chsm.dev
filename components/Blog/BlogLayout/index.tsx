@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import styles from "./index.module.scss";
 
 export interface BlogLayoutProps {
@@ -8,7 +9,7 @@ export interface BlogLayoutProps {
 
 export default function BlogLayout({ sidebar, article, toc }: BlogLayoutProps) {
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, !toc && styles.hideTocFirst)}>
       <aside className={styles.colSidebar}>{sidebar}</aside>
       <div className={styles.colToc}>{toc}</div>
       <main className={styles.colContent} itemScope itemType="https://schema.org/Blog">
