@@ -1,3 +1,11 @@
 .article {
-  margin-top: 1rem;
+  $width: 1px;
+  $pad: 16px;
+
+  margin: #{-$width} #{-$pad - $width} #{32px - $width};
+  padding: #{$pad};
+  border: #{$width} solid var(--color-border-lighter);
+  border-radius: 1.5rem;
+
+  background: linear-gradient(var(--color-background-light), var(--color-background) 1200px);
 }
