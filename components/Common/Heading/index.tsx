@@ -5,22 +5,23 @@ import clsx from "clsx";
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export type HeadingType = `h${HeadingLevel}`;
 
-export interface HeadingProps {
+interface BaseHeadingProps {
   level: 1 | 2 | 3 | 4 | 5 | 6 | (number & {});
-  id: string;
   className?: string;
   children?: React.ReactNode;
   // ...props
   style?: React.CSSProperties;
   itemProp?: "headline"; // add types as needed
+  linkItemProp?: "url";
 }
+export type HeadingProps = BaseHeadingProps & ({ id: string; href?: never } | { id?: never; href: string });
 
-export default function Heading({ level, id, className, children, ...props }: HeadingProps) {
+export default function Heading({ level, id, href, className, children, linkItemProp, ...props }: HeadingProps) {
   const Element = `h${level}` as HeadingType;
 
   return (
     <Element id={id} className={clsx(styles.heading, className)} {...props}>
-      <NextLink href={"#" + id}>
+      <NextLink href={href ?? "#" + id} itemProp={linkItemProp}>
         {children}
         <LinkIcon />
       </NextLink>

@@ -6,6 +6,7 @@ import Heading from "@components/Common/Heading";
 import DateTime from "@components/Specialized/DateTime";
 import NextLink from "next/link";
 import styles from "./index.module.scss";
+import { getBlogPostUrl } from "@api/blog";
 
 export interface BlogArticleHeaderProps {
   post: DbBlogPostWithAuthors;
@@ -14,7 +15,7 @@ export interface BlogArticleHeaderProps {
 export default function BlogArticleHeader({ post }: BlogArticleHeaderProps) {
   return (
     <header>
-      <Heading level={1} id="" itemProp="headline" className={styles.headline}>
+      <Heading level={1} href={getBlogPostUrl(post)} itemProp="headline" linkItemProp="url" className={styles.headline}>
         {post.title}
       </Heading>
       <div className={styles.headerInfo}>
