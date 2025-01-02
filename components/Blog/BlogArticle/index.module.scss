@@ -9,3 +9,22 @@
 
   background: linear-gradient(var(--color-background-light), var(--color-background) 1200px);
 }
+
+.footer {
+  display: flex;
+}
+.readMoreButton {
+  color: var(--color-accent-lighter);
+  margin: 1rem 2rem 0.5rem auto;
+
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border-lighter);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s;
+
+  letter-spacing: 2px;
+
+  &:hover {
+    border-color: var(--color-accent-lighter);
+  }
+}

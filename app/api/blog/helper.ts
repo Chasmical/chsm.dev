@@ -13,3 +13,9 @@ export function getBlogPostSlug(post: Pick<DbBlogPost, "created_at" | "slug">) {
     post.slug,
   ].join("/");
 }
+
+const truncateRegex = /(?:\r?\n|\r){\/\*\s*truncate\s*\*\/}(?:\r?\n|\r)/;
+
+export function truncateBlogPostContent(content: string) {
+  return content.slice(0, truncateRegex.exec(content)?.index);
+}

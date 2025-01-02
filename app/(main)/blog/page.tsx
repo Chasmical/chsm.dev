@@ -2,14 +2,13 @@ import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import { createServerSupabase } from "@lib/database/server";
 import { getAllBlogPosts } from "@api/blog";
+import { truncateBlogPostContent } from "@api/blog/helper";
 import { configureMdx } from "@lib/mdx";
 import configurePlugins, { MdxPluginConfigs } from "@lib/mdx/configure-plugins";
 import configureComponents from "@lib/mdx/configure-components";
 import BlogLayout from "@components/Blog/BlogLayout";
 import BlogSidebar from "@components/Blog/BlogSidebar";
 import BlogArticle from "@components/Blog/BlogArticle";
-
-const truncateRegex = /(?:\r?\n|\r){\/\*\s*truncate\s*\*\/}(?:\r?\n|\r)/;
 
 export default async function BlogLandingPage() {
   // Select all blog posts (throw notFound on error)
@@ -26,11 +25,7 @@ export default async function BlogLandingPage() {
   });
 
   const truncatedMdxContents = await Promise.all(
-    recent.map(post => {
-      let src = post.content;
-      src = src.slice(0, truncateRegex.exec(src)?.index);
-      return mdx.compile(src);
-    }),
+    recent.map(post => mdx.compile(truncateBlogPostContent(post.content))),
   );
 
   return (
@@ -39,11 +34,7 @@ export default async function BlogLandingPage() {
       article={
         <>
           {recent.map((post, i) => {
-            return (
-              <Fragment key={post.id}>
-                <BlogArticle post={post} mdxContent={truncatedMdxContents[i].content} />
-              </Fragment>
-            );
+            return <BlogArticle key={post.id} post={post} mdxContent={truncatedMdxContents[i].content} readMore />;
           })}
         </>
       }
