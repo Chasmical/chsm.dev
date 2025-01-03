@@ -13,9 +13,9 @@ export default function BlogSidebar({ posts }: BlogSidebarProps) {
       <div className={styles.title}>{"Recent posts"}</div>
 
       <ul className={styles.items}>
-        {posts.map((post, i) => (
+        {posts.map(post => (
           <li className={styles.item} key={post.id}>
-            <ActivatableLink className={styles.link} href={getBlogPostUrl(post)} alias={i === 0 ? "/blog" : undefined}>
+            <ActivatableLink className={styles.link} href={getBlogPostUrl(post)}>
               {post.title}
             </ActivatableLink>
           </li>

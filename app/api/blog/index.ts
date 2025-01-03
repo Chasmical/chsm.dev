@@ -13,7 +13,7 @@ export async function getBlogPostById(sb: Supabase, id: number): Promise<DbBlogP
 }
 
 /** Searches for blog posts within the specified date range, and, optionally, with the specified slug. */
-export async function searchBlogPosts(
+export async function searchBlogPostsBySlug(
   sb: Supabase,
   range: Date | [start: Date, end: Date],
   slug?: string,
@@ -30,6 +30,28 @@ export async function searchBlogPosts(
   if (slug) builder.eq("slug", slug).limit(1);
 
   return (await builder).data;
+}
+
+/** Searches for blog posts with the specified tags, within the specified page range. */
+export async function searchBlogPostsByTag(
+  sb: Supabase,
+  tags: string[],
+  pageIndex = 0,
+  pageSize = 10,
+): Promise<(DbBlogPostWithAuthors[] & { totalCount: number }) | null> {
+  const builder = sb.from("blog_posts").select(
+    `
+    id, created_at, edited_at, title, content, is_public, tags, slug,
+    authors:blog_post_authors(*, user:users(*))
+  `,
+    { count: "exact" },
+  );
+
+  builder.contains("tags", tags).range(pageIndex * pageSize, (pageIndex + 1) * pageSize - 1);
+
+  const { data, count } = await builder;
+
+  return data ? Object.assign(data, { totalCount: count! }) : null;
 }
 
 /** Selects all blog posts, sorted from newest to oldest. */
@@ -61,5 +83,5 @@ export async function getBlogPostFromParams(supabase: Supabase, params: BlogPost
   if (Number.isNaN(+date)) return null;
 
   // Select the matching post
-  return (await searchBlogPosts(supabase, date, slug))?.[0] ?? null;
+  return (await searchBlogPostsBySlug(supabase, date, slug))?.[0] ?? null;
 }

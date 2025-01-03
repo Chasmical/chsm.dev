@@ -4,6 +4,8 @@ import { createServerClient, type CookieMethodsServer } from "@supabase/ssr";
 import { createClient as createSupabaseClient, type SupabaseClientOptions } from "@supabase/supabase-js";
 import type { Database, Supabase } from "./types";
 
+export type { Database, Supabase };
+
 type ReadonlyRequestCookies = Awaited<ReturnType<typeof getCookies>>;
 type ClientOptions = SupabaseClientOptions<string & keyof Database> & { cookies: CookieMethodsServer };
 

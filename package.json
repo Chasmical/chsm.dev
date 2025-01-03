@@ -19,6 +19,7 @@
     "immer": "^10.1.1",
     "js-yaml": "^4.1.0",
     "katex": "^0.16.18",
+    "lodash": "^4.17.21",
     "mdast-util-to-string": "^4.0.0",
     "nanoid": "^5.0.9",
     "next": "15.1.2",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@types/hast": "^3.0.4",
     "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.13",
     "@types/mdast": "^4.0.4",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",

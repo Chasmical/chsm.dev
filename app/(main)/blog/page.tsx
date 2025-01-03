@@ -13,7 +13,7 @@ import BlogArticle from "@components/Blog/BlogArticle";
 export default async function BlogLandingPage() {
   // Select all blog posts (throw notFound on error)
   const supabase = createServerSupabase("anonymous", { revalidate: 300 });
-  const recent = (await getAllBlogPosts(supabase)) || notFound();
+  const recentPosts = (await getAllBlogPosts(supabase)) || notFound();
 
   // Configure and compile the markdown
   const mdxOptions: MdxPluginConfigs = { embedSize: [480, 270] };
@@ -24,17 +24,17 @@ export default async function BlogLandingPage() {
     components: configureComponents(),
   });
 
-  const truncatedMdxContents = await Promise.all(
-    recent.map(post => mdx.compile(truncateBlogPostContent(post.content))),
+  const truncatedMdxResults = await Promise.all(
+    recentPosts.map(post => mdx.compile(truncateBlogPostContent(post.content))),
   );
 
   return (
     <BlogLayout
-      sidebar={<BlogSidebar posts={recent} />}
+      sidebar={<BlogSidebar posts={recentPosts} />}
       article={
         <>
-          {recent.map((post, i) => {
-            return <BlogArticle key={post.id} post={post} mdxContent={truncatedMdxContents[i].content} readMore />;
+          {recentPosts.map((post, i) => {
+            return <BlogArticle key={post.id} post={post} mdxContent={truncatedMdxResults[i].content} readMore />;
           })}
         </>
       }

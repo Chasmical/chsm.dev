@@ -41,8 +41,8 @@ export default function BlogArticleHeader({ post }: BlogArticleHeaderProps) {
           <b>{"Tags: "}</b>
           {post.tags.length
             ? post.tags.map(tag => (
-                <NextLink key={tag} href="#" className={styles.tagLink}>
-                  {tag}
+                <NextLink key={tag} href={`/blog/tag/${tag}`} className={styles.tagLink}>
+                  {tag.replaceAll("_", " ")}
                 </NextLink>
               ))
             : "none"}
