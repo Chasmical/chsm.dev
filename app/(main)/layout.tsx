@@ -83,4 +83,8 @@ export const metadata: Metadata = {
     description,
     images: [],
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };

@@ -1,8 +1,8 @@
-import { Fragment } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createServerSupabase } from "@lib/database/server";
 import { getAllBlogPosts } from "@api/blog";
-import { truncateBlogPostContent } from "@api/blog/helper";
+import { getBlogPostSlug, truncateBlogPostContent } from "@api/blog/helper";
 import { configureMdx } from "@lib/mdx";
 import configurePlugins, { MdxPluginConfigs } from "@lib/mdx/configure-plugins";
 import configureComponents from "@lib/mdx/configure-components";
@@ -41,4 +41,36 @@ export default async function BlogLandingPage() {
       toc={null}
     />
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  // Select all blog posts (throw notFound on error)
+  const supabase = createServerSupabase("anonymous", { revalidate: 300 });
+  const recentPosts = (await getAllBlogPosts(supabase)) || notFound();
+
+  const title = `Recent blog posts`;
+  // TODO: Add a nice description for the blog
+  const description = [
+    `A total of ${recentPosts.length} blog posts:`,
+    ...recentPosts.map(p => `${getBlogPostSlug(p).split("/").slice(0, 3).join("-")}: ${p.title}`),
+  ].join("\n");
+
+  return {
+    title,
+    description,
+
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      locale: "en",
+      images: [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [],
+    },
+  };
 }
