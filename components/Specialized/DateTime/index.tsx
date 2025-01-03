@@ -14,7 +14,7 @@ export default function DateTime({ dateTime, format, ...props }: DateTimeProps) 
   const iso = dateTime.toISOString();
 
   return (
-    <time dateTime={iso} title={iso.replace("T", " ").replace("Z", " UTC")} {...props}>
+    <time dateTime={iso} title={iso.replace("T", " ").replace(/\.\d{3}Z/, " UTC")} {...props}>
       {format === "date"
         ? dateTime.toLocaleDateString("en-US", dateFormat)
         : dateTime.toLocaleTimeString("en-US", timeFormat)}

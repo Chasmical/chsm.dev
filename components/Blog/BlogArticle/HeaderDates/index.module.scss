@@ -1,0 +1,10 @@
+.datesAndTime {
+  display: flex;
+  flex-flow: column;
+  font-size: 0.8rem;
+  gap: 0.25rem;
+}
+.lastEditedDate {
+  font-style: italic;
+  font-size: 0.7rem;
+}
