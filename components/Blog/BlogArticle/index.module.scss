@@ -8,6 +8,10 @@
   border-radius: 1.5rem;
 
   background: linear-gradient(var(--color-background-light), var(--color-background) 1200px);
+
+  &:not(.truncated) {
+    padding-bottom: #{64px + $pad};
+  }
 }
 
 .headline {

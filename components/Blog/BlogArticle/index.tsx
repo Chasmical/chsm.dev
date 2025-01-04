@@ -9,6 +9,7 @@ import HeaderDates from "./HeaderDates";
 import HeaderTags from "./HeaderTags";
 import { getBlogPostUrl } from "@api/blog";
 import styles from "./index.module.scss";
+import clsx from "clsx";
 
 export interface BlogArticleProps {
   post: DbBlogPostWithAuthors;
@@ -23,7 +24,12 @@ export default function BlogArticle({ post, mdxContent, readMore }: BlogArticleP
   }, [post.content]);
 
   return (
-    <article itemProp="blogPost" className={styles.article} itemScope itemType="https://schema.org/BlogPosting">
+    <article
+      itemProp="blogPost"
+      className={clsx(styles.article, readMore && styles.truncated)}
+      itemScope
+      itemType="https://schema.org/BlogPosting"
+    >
       <meta itemProp="description" content={description || ""} />
 
       <header>
