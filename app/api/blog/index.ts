@@ -32,7 +32,7 @@ export async function searchBlogPostsBySlug(
   return (await builder).data;
 }
 
-/** Searches for blog posts with the specified tags, within the specified page range. */
+/** Searches for blog posts with the specified tags, within the specified page range, sorted from newest to oldest. */
 export async function searchBlogPostsByTag(
   sb: Supabase,
   tags: string[],
@@ -49,7 +49,7 @@ export async function searchBlogPostsByTag(
 
   builder.contains("tags", tags).range(pageIndex * pageSize, (pageIndex + 1) * pageSize - 1);
 
-  const { data, count } = await builder;
+  const { data, count } = await builder.order("created_at", { ascending: false });
 
   return data ? Object.assign(data, { totalCount: count! }) : null;
 }
