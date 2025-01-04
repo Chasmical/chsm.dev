@@ -14,6 +14,7 @@
   &.nonums > span {
     padding-left: 1rem;
     &::before { display: none; }
+    --line-num-offset: 16px;
   }
 
   ::selection {
@@ -25,6 +26,8 @@
   counter-increment: line;
   transition: background-color 0.2s;
   padding-right: 1rem;
+
+  --line-num-offset: 46px;
 
   &::before {
     display: inline-block;
@@ -42,8 +45,18 @@
     &::before { opacity: 1; }
   }
 
-  &.highlighted {
+  &.highlight {
     background-color: #88888830;
     &:hover { background-color: #88888848; }
+  }
+
+  &.annotate {
+    counter-increment: none;
+    margin: 0.25rem auto 0.25rem calc(var(--line-num-offset) + var(--offset, 0) * 7.8px);
+    padding: 0.5rem;
+    border: 1px solid var(--color-border-lightest);
+    border-radius: 0.25rem;
+
+    &::before { display: none; }
   }
 }

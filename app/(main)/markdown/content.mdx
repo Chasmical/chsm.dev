@@ -36,11 +36,13 @@ The website provides its own customized code blocks: with language icons ([`seti
 <svg viewBox="0 0 128 128" height="0.7em" width="0.7em"><path fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="round" d="M72,56 L72,56c11,11,11,29,0,40l-16,16c-11,11-29,11-40,0l0,0c-11-11-11-29,0-40 l14-14 M56,72 L56,72c-11-11-11-29,0-40l16-16c11-11,29-11,40,0l0,0c11,11,11,29,0,40 l-14,14"/></svg>
 ```
 
-The copy button and line numbers can both be removed by specifying `nocopy` and `nonums` options. You can also choose to highlight certain lines with `// highlight` directives in code.
+The copy button and line numbers can both be removed by specifying `nocopy` and `nonums` options. You can also choose to highlight certain lines with `// highlight` directives, or to turn them into "annotations" with `// annotate`.
 
 ```csharp title="/Solution/Project/Class.cs" nocopy nonums
 using System; // highlight this
 
+// annotate next
+// Pretend that this is pop-up documentation
 namespace Project
 {
     // highlight next
@@ -48,7 +50,12 @@ namespace Project
 }
 ```
 
+```ts
+const getString = (): string | undefined => undefined;
 
+const value: "" | 123 | undefined // annotate : offset=6
+const value = getString() && 123; // highlight
+```
 
 ## KaTeX math
 

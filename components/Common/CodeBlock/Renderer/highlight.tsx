@@ -1,6 +1,7 @@
 import { createElement, memo, useMemo } from "react";
 import { refractor } from "refractor";
 import type { PrismLanguage } from "@lib/data/languageIconAliases";
+import type { DirectiveInfo } from "../utils/extractHighlightDirectives";
 import normalizeTokens, { type RefractorElement, type RefractorToken } from "../utils/normalizeTokens";
 import styles from "./index.module.scss";
 import clsx from "clsx";
@@ -11,12 +12,12 @@ type HTMLAttrs = React.HTMLAttributes<HTMLElement>;
 export interface CodeBlockHighlightRendererProps {
   lang: PrismLanguage | (string & {});
   code: string;
-  highlightLines?: number[];
+  directives?: DirectiveInfo[];
   nonums?: boolean;
 }
 
 const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(props: CodeBlockHighlightRendererProps) {
-  const { code, highlightLines, lang, nonums } = props;
+  const { code, directives, lang, nonums } = props;
 
   // Transform the code into a Refractor AST, and group the resulting tokens by line
   const tokens = useMemo(() => {
@@ -24,8 +25,13 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
   }, [code, lang]);
 
   // Functions for getting line and token props
-  const getLineProps = (index: number): HTMLAttrs => {
-    return { className: highlightLines?.includes(index) ? styles.highlighted : undefined };
+  const getLineProps = (index: number): HTMLAttrs | undefined => {
+    const match = directives?.find(d => d.index === index);
+    if (!match) return;
+    return {
+      className: clsx(styles[match.type as never], match.className),
+      style: match.style,
+    };
   };
   const getTokenProps = (token: RefractorToken): HTMLAttrs => {
     token = token as RefractorElement;

@@ -22,7 +22,7 @@ export interface CodeBlockProps {
 
 export default function CodeBlock({ children, nonums, ...props }: CodeBlockProps) {
   // Process the code and extract the highlight directives
-  const { code, highlightLines } = useCodeProcessor(children);
+  const [code, directives] = useCodeProcessor(children);
 
   /**
    * Highlight syntax import is implemented differently for server and client:
@@ -50,7 +50,7 @@ export default function CodeBlock({ children, nonums, ...props }: CodeBlockProps
 
     return (
       <CodeBlockContainer {...props}>
-        <Renderer lang={prismLang!} code={code} highlightLines={highlightLines} nonums={nonums} />
+        <Renderer lang={prismLang!} code={code} directives={directives} nonums={nonums} />
       </CodeBlockContainer>
     );
   }
