@@ -7,7 +7,7 @@ export interface DirectiveInfo {
 
 const commentRegex = /\s*(?:\/\*(.+?)\*\/|\/\/(.+)|{\/\*(.+?)\*\/}|<!--(.+?)-->)\s*/g;
 
-const availableDirectiveTypes = ["highlight", "annotate"];
+const availableDirectiveTypes = ["highlight", "annotate-top", "annotate-mid", "annotate-bot", "annotate"];
 
 /**
  * Extracts directives from the code, removing them from the array.
@@ -36,7 +36,7 @@ export default function extractDirectives(lines: string[]): DirectiveInfo[] {
       const matchedType = availableDirectiveTypes.find(d => trimmedText.startsWith(d));
       if (!matchedType) continue;
 
-      const directiveContents = trimmedText.trimEnd().slice(matchedType.length + 1);
+      const directiveContents = trimmedText.slice(matchedType.length).trim();
       // When the directive is extracted, its position may need to be decremented once
       let decrementOnEmpty = false;
 
@@ -63,6 +63,11 @@ export default function extractDirectives(lines: string[]): DirectiveInfo[] {
           info.index++;
           directives.push(info);
           decrementOnEmpty = true;
+          break;
+        case "prev":
+        case "prev-line":
+          info.index--;
+          directives.push(info);
           break;
         case "begin":
         case "start":
