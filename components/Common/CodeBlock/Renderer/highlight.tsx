@@ -2,10 +2,10 @@ import { createElement, memo, useMemo } from "react";
 import { refractor } from "refractor";
 import type { PrismLanguage } from "@lib/data/languageIconAliases";
 import type { DirectiveInfo } from "../utils/extractHighlightDirectives";
-import normalizeTokens, { type RefractorElement, type RefractorToken } from "../utils/normalizeTokens";
+import normalizeTokens, { type RefractorToken } from "../utils/normalizeTokens";
 import styles from "./index.module.scss";
 import clsx from "clsx";
-import "./vsDarkTheme.scss"; // TODO: turn the theme into a config of some sort
+import "./vsDarkTheme.scss";
 
 type HTMLAttrs = React.HTMLAttributes<HTMLElement>;
 
@@ -26,20 +26,22 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
 
   // Functions for getting line and token props
   const getLineProps = (index: number): HTMLAttrs | undefined => {
-    const match = directives?.find(d => d.index === index);
-    if (!match) return;
+    const matches = directives?.filter(d => d.index === index);
+    if (!matches?.length) return;
+
     return {
-      className: clsx(styles[match.type as never], match.className),
-      style: match.style,
+      className: matches.reduce((acc, match) => clsx(acc, styles[match.type as never], match.className), ""),
+      style: matches.reduce((acc, match) => Object.assign(acc, match.style), {}),
     };
   };
-  const getTokenProps = (token: RefractorToken): HTMLAttrs => {
-    token = token as RefractorElement;
-    const { className: classNames, ...props } = token.properties;
-    return { className: classNames.join(" "), children: token.children.map(renderToken), ...props };
+
+  const renderTokens = (tokens: RefractorToken[]) => {
+    return tokens.map((token, i) => renderToken(token, i));
   };
-  const renderToken = (token: RefractorToken): React.ReactNode => {
-    return token.type === "text" ? token.value : createElement(token.tagName, getTokenProps(token));
+  const renderToken = (token: RefractorToken, key: number): React.ReactNode => {
+    if (token.type === "text") return token.value;
+    const props = { key, className: token.properties.className.join(" ") };
+    return createElement(token.tagName, props, token.children.map(renderToken));
   };
 
   return (
@@ -47,9 +49,7 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
       <code className={clsx(styles.code, nonums && styles.nonums)}>
         {tokens.map((line, index) => (
           <span key={index} {...getLineProps(index)}>
-            {line.map((token, index) => (
-              <span key={index} {...getTokenProps(token)} />
-            ))}
+            {renderTokens(line)}
             {"\n"}
           </span>
         ))}

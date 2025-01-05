@@ -16,11 +16,12 @@ const CodeBlockPlainRenderer = memo(function CodeBlockPlainRenderer(props: CodeB
 
   // Function for getting line props
   const getLineProps = (index: number): HTMLAttrs | undefined => {
-    const match = directives?.find(d => d.index === index);
-    if (!match) return;
+    const matches = directives?.filter(d => d.index === index);
+    if (!matches?.length) return;
+
     return {
-      className: clsx(styles[match.type as never], match.className),
-      style: match.style,
+      className: matches.reduce((acc, match) => clsx(acc, styles[match.type as never], match.className), ""),
+      style: matches.reduce((acc, match) => Object.assign(acc, match.style), {}),
     };
   };
 

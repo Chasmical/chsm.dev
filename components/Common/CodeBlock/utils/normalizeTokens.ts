@@ -7,103 +7,106 @@ export type RefractorElement = RfElem & {
 
 export type RefractorToken = RefractorElement | Text;
 
-// The following code is adapted from the prism-react-renderer package:
-// - https://github.com/FormidableLabs/prism-react-renderer/blob/master/packages/prism-react-renderer/src/utils/normalizeTokens.ts
-
-const newLineRegex = /\r\n|\r|\n/;
-
-function normalizeEmptyLines(line: RefractorToken[]) {
-  if (line.length === 0) {
-    line.push({
-      type: "element",
-      tagName: "span",
-      properties: { className: ["plain"] },
-      children: [{ type: "text", value: "\n" }],
-    });
-  } else if (line.length === 1 && (line[0] as Text).value === "") {
-    line[0] = {
-      type: "element",
-      tagName: "span",
-      properties: { className: ["plain"] },
-      children: [{ type: "text", value: "\n" }],
-    };
-  }
-}
-
-function appendClasses(classes: string[], add: string[] | string): string[] {
-  if (Array.isArray(add) && add[0] === "token") return add;
-  if (classes.length > 0 && classes[classes.length - 1] === add) return classes;
-  return classes.concat(add);
-}
+const newLineRegex = /\r?\n|\r/g;
 
 /**
- * Transforms the Refractor's AST into a flattened array of tokens, grouped by line.
+ * Transforms the Refractor's AST into an array of trees of tokens, grouped by line.
  */
 export default function normalizeTokens(ast: RefractorRoot): RefractorToken[][] {
-  const tokens = ast.children as RefractorToken[];
-
-  const typeArrStack: string[][] = [[]];
-  const tokenArrStack = [tokens];
-  const tokenArrIndexStack = [0];
-  const tokenArrSizeStack = [tokens.length];
-
-  let i = 0;
-  let stackIndex = 0;
-  let currentLine: RefractorToken[] = [];
-  const acc = [currentLine];
-
-  while (stackIndex > -1) {
-    while ((i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]) {
-      let classes = typeArrStack[stackIndex];
-      const token = tokenArrStack[stackIndex][i];
-
-      // Determine type, and append to classNames if necessary
-      if (token.type === "text") {
-        classes = stackIndex > 0 ? classes : ["plain"];
-      } else {
-        classes = appendClasses(classes, token.properties.className);
-        // if (token.alias) types = appendTypes(types, token.alias);
-
-        // If the token contains children, increase the stack depth and repeat this while-loop
-        stackIndex++;
-        typeArrStack.push(classes);
-        tokenArrStack.push(token.children);
-        tokenArrIndexStack.push(0);
-        tokenArrSizeStack.push(token.children.length);
-        continue;
+  type IntermediateToken =
+    | {
+        value: string;
+        parents: RefractorElement[];
       }
+    | {
+        value?: never;
+        parents?: never;
+        tagName: string;
+        className: string[];
+        children: IntermediateToken[];
+      };
 
-      // Split the text token by new-lines
-      const splitByNewlines = token.value.split(newLineRegex);
-      currentLine.push({
-        type: "element",
-        tagName: "span",
-        properties: { className: classes },
-        children: [{ type: "text", value: splitByNewlines[0] }],
-      });
+  let traversingLine: IntermediateToken[] = [];
+  const traversedLines = [traversingLine];
+  const parentStack: RefractorElement[] = [];
 
-      // Create a new line for split string
-      for (let i = 1; i < splitByNewlines.length; i++) {
-        normalizeEmptyLines(currentLine);
-        acc.push((currentLine = []));
+  // Traverse the entire tree and build a list of nodes with lists of their parents
+  function traverse(children: RefractorToken[]) {
+    for (const child of children) {
+      if (child.type === "text") {
+        if (child.value.includes("\n")) {
+          // Split the multi-line text node
+          const split = child.value.split(newLineRegex);
+          if (split[0]) {
+            traversingLine.push({ value: split[0], parents: parentStack.slice() });
+          }
 
-        currentLine.push({
-          type: "element",
-          tagName: "span",
-          properties: { className: classes },
-          children: [{ type: "text", value: splitByNewlines[i] }],
-        });
+          // Create new lines for each extra line
+          for (let i = 1; i < split.length; i++) {
+            traversingLine = [];
+            traversedLines.push(traversingLine);
+            if (split[i]) {
+              traversingLine.push({ value: split[i], parents: parentStack.slice() });
+            }
+          }
+        } else {
+          // Single-line text node, append to the line
+          traversingLine.push({ value: child.value, parents: parentStack.slice() });
+        }
+      } else {
+        // Element node, add to stack and process its children
+        parentStack.push(child);
+        traverse(child.children);
+        parentStack.pop();
       }
     }
-
-    // Decrease the stack depth
-    stackIndex--;
-    typeArrStack.pop();
-    tokenArrStack.pop();
-    tokenArrIndexStack.pop();
-    tokenArrSizeStack.pop();
   }
 
-  normalizeEmptyLines(currentLine);
-  return acc;
+  traverse(ast.children as RefractorToken[]);
+
+  // Function to transform groups of children with same parent into parents with children
+  function reduceParents(tokens: IntermediateToken[], from: number, toEx: number, depth = 0) {
+    for (let i = from; i < toEx; i++) {
+      const token = tokens[i];
+      const parent = token.parents?.[depth];
+      if (!parent) continue;
+
+      let childrenCount = 1;
+      let j = i;
+      // Look for the first child's siblings
+      while (++j < toEx && tokens[j].parents?.[depth] === parent) childrenCount++;
+
+      // Create a parent and insert it in its children's place
+      const newParent: IntermediateToken = {
+        tagName: parent.tagName,
+        className: parent.properties.className,
+        children: undefined!,
+      };
+      const siblingsAndSelf = tokens.splice(i, childrenCount, newParent);
+      newParent.children = siblingsAndSelf;
+      toEx -= childrenCount - 1;
+
+      // Combine children groups of the next depth in the new parent
+      reduceParents(siblingsAndSelf, 0, siblingsAndSelf.length, depth + 1);
+    }
+  }
+
+  // Function to turn an intermediate token back into a refractor token
+  function convertTokenBack(inter: IntermediateToken): RefractorToken {
+    if (inter.value !== undefined) {
+      return { type: "text", value: inter.value };
+    }
+    return {
+      type: "element",
+      tagName: inter.tagName,
+      properties: { className: inter.className },
+      children: inter.children.map(convertTokenBack),
+    };
+  }
+
+  // Combine children groups and convert the tokens
+  return traversedLines.map(lineTokens => {
+    reduceParents(lineTokens, 0, lineTokens.length);
+    return lineTokens.map(convertTokenBack);
+  });
 }
