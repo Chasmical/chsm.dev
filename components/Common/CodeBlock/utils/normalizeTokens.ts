@@ -1,6 +1,12 @@
-import type { RefractorRoot, RefractorElement as RfElem, Text } from "refractor";
+import type { RefractorRoot as RfRoot, RefractorElement as RfElem, Text } from "refractor";
 
-export type RefractorElement = RfElem & {
+export type { Text };
+
+export type RefractorRoot = Omit<RfRoot, "children"> & {
+  children: (RefractorElement | Text)[];
+};
+
+export type RefractorElement = Omit<RfElem, "children"> & {
   properties: { className: string[] };
   children: (RefractorElement | Text)[];
 };
@@ -12,7 +18,7 @@ const newLineRegex = /\r?\n|\r/g;
 /**
  * Transforms the Refractor's AST into an array of trees of tokens, grouped by line.
  */
-export default function normalizeTokens(ast: RefractorRoot): RefractorToken[][] {
+export default function normalizeTokens(ast: RfRoot): RefractorToken[][] {
   type IntermediateToken =
     | {
         value: string;

@@ -2,7 +2,8 @@ import { createElement, memo, useMemo } from "react";
 import { refractor } from "refractor";
 import type { PrismLanguage } from "@lib/data/languageIconAliases";
 import type { DirectiveInfo } from "../utils/extractHighlightDirectives";
-import normalizeTokens, { type RefractorToken } from "../utils/normalizeTokens";
+import normalizeTokens, { type RefractorRoot, type RefractorToken } from "../utils/normalizeTokens";
+import { typescriptAstFixes } from "../utils/refractorAstFixes";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import "./vsDarkTheme.scss";
@@ -21,7 +22,13 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
 
   // Transform the code into a Refractor AST, and group the resulting tokens by line
   const tokens = useMemo(() => {
-    return normalizeTokens(refractor.highlight(code, lang));
+    const ast = refractor.highlight(code, lang) as RefractorRoot;
+
+    if (lang === "typescript" || lang === "tsx") {
+      typescriptAstFixes(ast);
+    }
+
+    return normalizeTokens(ast);
   }, [code, lang]);
 
   // Functions for getting line and token props
