@@ -374,6 +374,47 @@ export type Database = {
           },
         ];
       };
+      uploads: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          edited_at: string | null;
+          filename: string;
+          hash: number;
+          id: number;
+          size: number;
+          slug: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string;
+          edited_at?: string | null;
+          filename: string;
+          hash: number;
+          id?: number;
+          size: number;
+          slug: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          edited_at?: string | null;
+          filename?: string;
+          hash?: number;
+          id?: number;
+          size?: number;
+          slug?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "uploads_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       users: {
         Row: {
           avatar_url: string | null;
