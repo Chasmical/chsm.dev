@@ -1,7 +1,7 @@
 import type { MdxComponents } from "@lib/mdx";
 import Link from "@components/Common/Link";
-import Code from "@components/Common/Code";
-import CodeBlock from "@components/Common/CodeBlock";
+import CodeBlock, { ShikiLanguage } from "@components/Common/CodeBlock";
+import InlineCodeBlock, { InlineCodeBlockProps } from "@components/Common/CodeBlock/inline";
 import Heading, { HeadingProps } from "@components/Common/Heading";
 import InlineCssColor from "@components/Specialized/InlineCssColor";
 import Embed from "@components/Specialized/Embed";
@@ -12,12 +12,30 @@ function makeHeading(depth: 1 | 2 | 3 | 4 | 5 | 6) {
   return (props: HeadingProps) => <Heading {...props} level={depth} />;
 }
 
+const langRegex = /\/\/lang=([a-z0-9-]+)$/;
+
+function InlineCode({ children, ...props }: InlineCodeBlockProps) {
+  let lang: ShikiLanguage | undefined;
+  if (typeof children === "string") {
+    const match = langRegex.exec(children);
+    if (match) {
+      lang = match[1] as ShikiLanguage;
+      children = children.slice(0, match.index);
+    }
+  }
+  return (
+    <InlineCodeBlock lang={lang} {...props}>
+      {children}
+    </InlineCodeBlock>
+  );
+}
+
 export default function configureComponents(_config?: unknown): MdxComponents {
   return {
     em: "i",
     strong: "b",
     a: Link,
-    code: Code,
+    code: InlineCode,
     pre: CodeBlock,
     h1: makeHeading(1),
     h2: makeHeading(2),

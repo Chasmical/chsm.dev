@@ -4,6 +4,10 @@
   border-radius: 8px;
   overflow: hidden;
 }
+.pre {
+  overflow-x: auto;
+  counter-reset: line;
+}
 
 .header {
   display: flex;

@@ -14,10 +14,14 @@ export interface CodeBlockHighlightRendererProps {
   code: string;
   directives?: DirectiveInfo[];
   nonums?: boolean;
+  inline?: boolean;
+  // ...props
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(props: CodeBlockHighlightRendererProps) {
-  const { code, directives, lang, nonums } = props;
+  const { code, directives, lang, nonums, inline, className, style } = props;
 
   // Highlight the code with Shiki
   const tokens = useMemo(() => {
@@ -28,7 +32,7 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
     }).tokens;
   }, [code, lang]);
 
-  // Function for getting the specified line's className and style (directives)
+  // Function for getting a line's className and style (directives)
   const getLineProps = (index: number): HTMLAttrs | undefined => {
     const matches = directives?.filter(d => d.index === index);
     if (!matches?.length) return;
@@ -53,19 +57,44 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
       </span>
     );
   };
+  // Function to render one line of themed tokens (shiki)
+  const renderLine = (tokens: ThemedToken[], index: number) => {
+    return (
+      <span key={index} {...getLineProps(index)}>
+        {tokens.map(renderToken)}
+        {"\n"}
+      </span>
+    );
+  };
+
+  let style2 = style;
+  if (!inline && !nonums) {
+    // If there's a lot of lines, increase the gutter's width to fit all the line numbers
+    const lineNumDigits = Math.ceil(Math.log10(tokens.length));
+    if (lineNumDigits > 2) (style2 ??= {})["--line-num-digits"] = lineNumDigits;
+  }
 
   return (
-    <pre className={clsx(styles.pre, "shiki", `language-${lang}`)}>
-      <code className={clsx(styles.code, nonums && styles.nonums)}>
-        {tokens.map((line, index) => (
-          <span key={index} {...getLineProps(index)}>
-            {line.map((token, i) => renderToken(token, i))}
-            {"\n"}
-          </span>
-        ))}
-      </code>
-    </pre>
+    <code
+      className={clsx(
+        inline ? styles.inline : styles.block,
+        nonums && styles.nonums,
+        "shiki language-" + lang,
+        className,
+      )}
+      style={style2}
+    >
+      {inline ? tokens[0].map(renderToken) : tokens.map(renderLine)}
+    </code>
   );
 });
 
 export default CodeBlockHighlightRenderer;
+
+declare global {
+  namespace React {
+    interface CSSProperties {
+      ["--line-num-digits"]?: number;
+    }
+  }
+}

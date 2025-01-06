@@ -32,7 +32,7 @@ export default function CodeBlockContainer({
         </div>
       )}
       {!title && !nocopy && <CodeBlockCopyButton float />}
-      {children}
+      <pre className={styles.pre}>{children}</pre>
     </div>
   );
 }

@@ -1,49 +1,55 @@
-.pre {
-  overflow-x: auto;
-  color: #9cdcfe;
+.block, .inline {
   background-color: #1e1e1e;
-  counter-reset: line;
-}
-.code {
-  display: grid;
-  padding: 14px 0;
-  white-space: pre;
   font-size: 13px;
   line-height: 18px;
+
+  ::selection {
+    background-color: #007acc99;
+  }
+}
+
+.block {
+  display: grid;
   cursor: text;
+  width: max-content;
+  min-width: 100%;
+  padding: 14px 0;
+  white-space: pre;
 
   &.nonums > span {
     padding-left: 1rem;
     &::before { display: none; }
     --line-num-offset: 16px;
   }
-
-  ::selection {
-    background-color: rgba(0, 122, 204, 0.6);
-  }
+}
+.inline {
+  display: inline;
+  border: 1px solid var(--color-border-lighter);
+  border-radius: 0.375em;
+  padding: 0.125em 0.25em;
+  white-space: break-spaces;
 }
 
-.code > span {
+.block > span {
   counter-increment: line;
   transition: background-color 0.2s;
   padding-right: 1rem;
 
-  --line-num-offset: 46px;
+  --line-num-offset: calc(30px + 7.8px * var(--line-num-digits, 2));
 
   &::before {
     display: inline-block;
     content: counter(line);
     margin: 0 20px 0 10px;
-    width: 16px;
+    width: calc(7.8px * var(--line-num-digits, 2));
     flex-shrink: 0;
     text-align: right;
-    transition: opacity 0.2s;
-    color: rgb(156, 220, 254);
-    opacity: 0.4;
+    transition: color 0.2s;
+    color: #6e7681;
   }
   &:hover {
     background-color: #88888818;
-    &::before { opacity: 1; }
+    &::before { color: #cccccc; }
   }
 
   &.highlight {

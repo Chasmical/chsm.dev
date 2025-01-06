@@ -1,7 +1,7 @@
 import { Children, useMemo } from "react";
 import extractDirectives, { DirectiveInfo } from "./extractDirectives";
 
-function stringifyChildren(children: React.ReactNode, results: string[] = []) {
+export function stringifyChildren(children: React.ReactNode, results: string[] = []) {
   Children.forEach(children, child => {
     const elem = child as React.ReactElement<React.PropsWithChildren>;
     if (elem?.props?.children != null) {

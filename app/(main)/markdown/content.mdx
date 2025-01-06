@@ -30,13 +30,13 @@ The website supports basic [Markdown](https://commonmark.org/help/) features and
 
 ## Code blocks
 
-The website provides its own customized code blocks: with language icons ([`seti-ui`](https://github.com/jesseweed/seti-ui)), file names, line numbers, copy buttons, and absolutely ***spectacular*** syntax highlighting ([`shiki`](https://github.com/shikijs/shiki))!
+The website provides its own customized code blocks: with language icons ([`seti-ui`](https://github.com/jesseweed/seti-ui)), file names, line numbers, copy buttons, and absolutely ***spectacular*** syntax highlighting ([`shiki`](https://github.com/shikijs/shiki))! Looks just like VS Code, doesn't it?
 
 ```svg title="~/source/repos/icons/link.svg"
 <svg viewBox="0 0 128 128" height="0.7em" width="0.7em"><path fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="round" d="M72,56 L72,56c11,11,11,29,0,40l-16,16c-11,11-29,11-40,0l0,0c-11-11-11-29,0-40 l14-14 M56,72 L56,72c-11-11-11-29,0-40l16-16c11-11,29-11,40,0l0,0c11,11,11,29,0,40 l-14,14"/></svg>
 ```
 
-The copy button and line numbers can both be removed by specifying `nocopy` and `nonums` options. You can also choose to highlight certain lines with `// highlight` directives, or to turn them into "annotations" with `// annotate`.
+The copy button and line numbers can both be removed by specifying `nocopy//lang=tsx` and `nonums//lang=tsx` options. You can also choose to highlight certain lines with `// highlight//lang=tsx` directives, or to turn them into "annotations" with `// annotate//lang=tsx`.
 
 ```tsx title="/app/(main)/markdown/some-file.tsx"
 /* comment */
@@ -101,7 +101,7 @@ https://youtu.be/AzYJUVqlUCA
 
 https://youtu.be/AltZj--zdss
 
-The `<iframe>`s are loaded on click to prevent unwanted tracking by third parties.
+The `<iframe>//lang=tsx`s are loaded on click to prevent unwanted tracking by third parties.
 
 
 
