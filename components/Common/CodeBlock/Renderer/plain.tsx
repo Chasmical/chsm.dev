@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { DirectiveInfo } from "../utils/extractHighlightDirectives";
+import type { DirectiveInfo } from "../utils/extractDirectives";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 

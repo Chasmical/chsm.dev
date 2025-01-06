@@ -30,7 +30,7 @@ The website supports basic [Markdown](https://commonmark.org/help/) features and
 
 ## Code blocks
 
-The website provides its own customized code blocks: with language icons ([`seti-ui`](https://github.com/jesseweed/seti-ui)), file names, line numbers, copy buttons, and syntax highlighting ([`refractor`](https://github.com/wooorm/refractor) / [Prism.js](https://prismjs.com)).
+The website provides its own customized code blocks: with language icons ([`seti-ui`](https://github.com/jesseweed/seti-ui)), file names, line numbers, copy buttons, and absolutely ***spectacular*** syntax highlighting ([`shiki`](https://github.com/shikijs/shiki))!
 
 ```svg title="~/source/repos/icons/link.svg"
 <svg viewBox="0 0 128 128" height="0.7em" width="0.7em"><path fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="round" d="M72,56 L72,56c11,11,11,29,0,40l-16,16c-11,11-29,11-40,0l0,0c-11-11-11-29,0-40 l14-14 M56,72 L56,72c-11-11-11-29,0-40l16-16c11-11,29-11,40,0l0,0c11,11,11,29,0,40 l-14,14"/></svg>
@@ -38,24 +38,31 @@ The website provides its own customized code blocks: with language icons ([`seti
 
 The copy button and line numbers can both be removed by specifying `nocopy` and `nonums` options. You can also choose to highlight certain lines with `// highlight` directives, or to turn them into "annotations" with `// annotate`.
 
-```csharp title="/Solution/Project/Class.cs" nocopy nonums
-using System; // highlight this
-
-// annotate next
-// Pretend that this is pop-up documentation
-namespace Project
-{
-    // highlight next
-    public sealed class Class : System.Object { }
+```tsx title="/app/(main)/markdown/some-file.tsx"
+/* comment */
+interface SomeProps extends React.HTMLAttributes<HTMLDivElement> {
+  innerStyle?: React.CSSProperties;
 }
+
+export function renderSomething(data: string, props?: SomeProps) {
+  const writeCount = 5 * 12.512e6, regex = /^a(b*)c|[xyz]+$/g;
+
+  return (
+    // highlight start
+    <>
+      <label>{"Label:"}</label>
+      <Component.Wrapper data={data} {...props} />
+    </>
+    // highlight end
+  );
+}
+
+type TypeA = string | Document | undefined;
+const text: string | TypeA | false = null || ("bla-bla-bla" as TypeA);
+const text: false | TypeA // annotate this: offset=6
 ```
 
-```ts
-const getString = (): string | undefined => undefined;
 
-const value: "" | 123 | undefined // annotate : offset=6
-const value = getString() && 123; // highlight
-```
 
 ## KaTeX math
 

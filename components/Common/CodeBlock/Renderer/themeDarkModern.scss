@@ -1,0 +1,26 @@
+.shiki {
+  color: #9cdcfe;
+  background-color: #1e1e1e;
+}
+
+.sh-i { color: #9cdcfe } // identifiers, variables, fields, properties
+.sh-q { color: #6a9955 } // comments
+.sh-k { color: #569cd6 } // language keywords
+.sh-K { color: #c586c0 } // return, continue, break
+.sh-o { color: #d4d4d4 } // operators
+.sh-p { color: #d4d4d4 } // punctuation
+.sh-P { color: #808080 } // <> for html-like tags
+
+.sh-n { color: #b5cea8 } // numbers
+.sh-s { color: #ce9178 } // strings
+.sh-r { color: #d16969 } // literals and charset
+.sh-R { color: #ce9178 } // groups
+.sh-g { color: #d7ba7d } // quantifiers
+.sh-G { color: #dcdcaa } // ^|$
+
+.sh-t { color: #569cd6 } // HTML-like tags
+.sh-c { color: #4ec9b0 } // classes and types
+.sh-C { color: #4ec9b0 } // components
+.sh-f { color: #dcdcaa } // functions
+
+.sh-_ { color: magenta } // unstyled tokens, only in development env

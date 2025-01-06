@@ -1,17 +1,16 @@
-import { createElement, memo, useMemo } from "react";
-import { refractor } from "refractor";
-import type { PrismLanguage } from "@lib/data/languageIconAliases";
-import type { DirectiveInfo } from "../utils/extractHighlightDirectives";
-import normalizeTokens, { type RefractorRoot, type RefractorToken } from "../utils/normalizeTokens";
-import { typescriptAstFixes } from "../utils/refractorAstFixes";
+import { memo, useMemo } from "react";
+import type { ShikiLanguage } from "@lib/data/languageIconAliases";
+import type { DirectiveInfo } from "../utils/extractDirectives";
+import type { ThemedToken } from "shiki";
+import { shiki } from "../utils/shiki";
 import styles from "./index.module.scss";
 import clsx from "clsx";
-import "./vsDarkTheme.scss";
+import "./themeDarkModern.scss";
 
 type HTMLAttrs = React.HTMLAttributes<HTMLElement>;
 
 export interface CodeBlockHighlightRendererProps {
-  lang: PrismLanguage | (string & {});
+  lang: ShikiLanguage | (string & {});
   code: string;
   directives?: DirectiveInfo[];
   nonums?: boolean;
@@ -20,18 +19,16 @@ export interface CodeBlockHighlightRendererProps {
 const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(props: CodeBlockHighlightRendererProps) {
   const { code, directives, lang, nonums } = props;
 
-  // Transform the code into a Refractor AST, and group the resulting tokens by line
+  // Highlight the code with Shiki
   const tokens = useMemo(() => {
-    const ast = refractor.highlight(code, lang) as RefractorRoot;
-
-    if (lang === "typescript" || lang === "tsx") {
-      typescriptAstFixes(ast);
-    }
-
-    return normalizeTokens(ast);
+    return shiki.codeToTokens(code, {
+      lang: lang as ShikiLanguage,
+      theme: "class-theme",
+      includeExplanation: process.env.NODE_ENV === "development",
+    }).tokens;
   }, [code, lang]);
 
-  // Functions for getting line and token props
+  // Function for getting the specified line's className and style (directives)
   const getLineProps = (index: number): HTMLAttrs | undefined => {
     const matches = directives?.filter(d => d.index === index);
     if (!matches?.length) return;
@@ -42,21 +39,27 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
     };
   };
 
-  const renderTokens = (tokens: RefractorToken[]) => {
-    return tokens.map((token, i) => renderToken(token, i));
-  };
-  const renderToken = (token: RefractorToken, key: number): React.ReactNode => {
-    if (token.type === "text") return token.value;
-    const props = { key, className: token.properties.className.join(" ") };
-    return createElement(token.tagName, props, token.children.map(renderToken));
+  // Function to render a themed token (shiki)
+  const renderToken = (token: ThemedToken, key: number): React.ReactNode => {
+    if (!token.content.trim()) return token.content;
+
+    if (process.env.NODE_ENV === "development" && token.color?.includes("TODO")) {
+      console.log(token.explanation);
+    }
+
+    return (
+      <span key={key} className={token.color}>
+        {token.content}
+      </span>
+    );
   };
 
   return (
-    <pre className={clsx(styles.pre, "refractor", `language-${lang}`)}>
+    <pre className={clsx(styles.pre, "shiki", `language-${lang}`)}>
       <code className={clsx(styles.code, nonums && styles.nonums)}>
         {tokens.map((line, index) => (
           <span key={index} {...getLineProps(index)}>
-            {renderTokens(line)}
+            {line.map((token, i) => renderToken(token, i))}
             {"\n"}
           </span>
         ))}

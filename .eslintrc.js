@@ -11,7 +11,7 @@ module.exports = {
     "no-constant-binary-expression": "warn", // a + b ?? c
 
     "@typescript-eslint/no-unused-vars": "off", // handled by "unused-imports" plugin
-    "unused-imports/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "unused-imports/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "unused-imports/no-unused-imports": "warn",
 
     "no-empty": "off", // annoying when writing new code

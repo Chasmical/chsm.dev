@@ -1,13 +1,13 @@
-import type { LanguageOrIconAlias, PrismLanguage } from "@lib/data/languageIconAliases";
+import type { LanguageOrIconAlias, ShikiLanguage } from "@lib/data/languageIconAliases";
 import useCodeProcessor from "./utils/useCodeProcessor";
-import importHighlightLanguage from "./utils/importHighlightLanguage";
-import useHighlightLanguage from "./utils/useHighlightLanguage";
+import importShikiLanguage from "./utils/importShikiLanguage";
+import useShikiLanguage from "./utils/useShikiLanguage";
 import CodeBlockContainer from "./Container";
 import CodeBlockHighlightRenderer from "./Renderer/highlight";
 import CodeBlockPlainRenderer from "./Renderer/plain";
 import { rsc } from "rsc-env";
 
-export type { LanguageOrIconAlias, PrismLanguage } from "@lib/data/languageIconAliases";
+export type { LanguageOrIconAlias, ShikiLanguage } from "@lib/data/languageIconAliases";
 
 export interface CodeBlockProps {
   lang?: LanguageOrIconAlias | (string & {});
@@ -37,20 +37,20 @@ export default function CodeBlock({ children, nonums, ...props }: CodeBlockProps
    */
 
   if (rsc) {
-    return importHighlightLanguage(props.lang).then(compositeBlock);
+    return importShikiLanguage(props.lang).then(compositeBlock);
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const prismLang = useHighlightLanguage(props.lang);
-  return compositeBlock(prismLang);
+  const shikiLang = useShikiLanguage(props.lang);
+  return compositeBlock(shikiLang);
 
   // Function for the final CodeBlock component render
-  function compositeBlock(prismLang?: PrismLanguage) {
-    const Renderer = prismLang ? CodeBlockHighlightRenderer : CodeBlockPlainRenderer;
+  function compositeBlock(shikiLang?: ShikiLanguage) {
+    const Renderer = shikiLang ? CodeBlockHighlightRenderer : CodeBlockPlainRenderer;
 
     return (
       <CodeBlockContainer {...props}>
-        <Renderer lang={prismLang!} code={code} directives={directives} nonums={nonums} />
+        <Renderer lang={shikiLang!} code={code} directives={directives} nonums={nonums} />
       </CodeBlockContainer>
     );
   }

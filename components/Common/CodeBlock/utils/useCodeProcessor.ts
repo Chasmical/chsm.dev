@@ -1,5 +1,5 @@
 import { Children, useMemo } from "react";
-import extractHighlightDirectives, { DirectiveInfo } from "./extractHighlightDirectives";
+import extractDirectives, { DirectiveInfo } from "./extractDirectives";
 
 function stringifyChildren(children: React.ReactNode, results: string[] = []) {
   Children.forEach(children, child => {
@@ -20,7 +20,7 @@ function stringifyChildren(children: React.ReactNode, results: string[] = []) {
 export default function useCodeProcessor(children: React.ReactNode): [code: string, directives: DirectiveInfo[]] {
   return useMemo(() => {
     const lines = stringifyChildren(children);
-    const directives = extractHighlightDirectives(lines);
+    const directives = extractDirectives(lines);
 
     return [lines.join("\n"), directives];
   }, [children]);
