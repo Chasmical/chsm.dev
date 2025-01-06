@@ -12,15 +12,20 @@ function makeHeading(depth: 1 | 2 | 3 | 4 | 5 | 6) {
   return (props: HeadingProps) => <Heading {...props} level={depth} />;
 }
 
-const langRegex = /\/\/lang=([a-z0-9-]+)$/;
+const preRegex = /^\/\*pre[=:](.+?)\*\//;
+const langRegex = /\/\/lang[=:]([a-z0-9-]+)$/;
 
 function InlineCode({ children, ...props }: InlineCodeBlockProps) {
   let lang: ShikiLanguage | undefined;
   if (typeof children === "string") {
-    const match = langRegex.exec(children);
-    if (match) {
-      lang = match[1] as ShikiLanguage;
-      children = children.slice(0, match.index);
+    const matchLang = langRegex.exec(children);
+    if (matchLang) {
+      lang = matchLang[1] as ShikiLanguage;
+      children = children.slice(0, matchLang.index);
+    }
+    const matchPre = preRegex.exec(children as string);
+    if (matchPre) {
+      children = matchPre[1] + "\n" + (children as string).slice(matchPre[0].length);
     }
   }
   return (

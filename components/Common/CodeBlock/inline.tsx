@@ -17,7 +17,7 @@ export interface InlineCodeBlockProps {
 }
 
 export default function InlineCodeBlock({ lang, children, ...props }: InlineCodeBlockProps) {
-  const code = stringifyChildren(children).join(" ");
+  const code = stringifyChildren(children).join("\n");
 
   if (rsc) {
     return importShikiLanguage(lang).then(compositeInline);

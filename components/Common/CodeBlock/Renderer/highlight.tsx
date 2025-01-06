@@ -84,7 +84,7 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
       )}
       style={style2}
     >
-      {inline ? tokens[0].map(renderToken) : tokens.map(renderLine)}
+      {inline ? tokens.at(-1)!.map(renderToken) : tokens.map(renderLine)}
     </code>
   );
 });

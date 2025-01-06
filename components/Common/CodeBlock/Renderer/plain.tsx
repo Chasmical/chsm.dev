@@ -48,7 +48,7 @@ const CodeBlockPlainRenderer = memo(function CodeBlockPlainRenderer(props: CodeB
 
   return (
     <code className={clsx(inline ? styles.inline : styles.block, nonums && styles.nonums, className)} style={style2}>
-      {inline ? lines[0] : lines.map(renderLine)}
+      {inline ? lines.at(-1) : lines.map(renderLine)}
     </code>
   );
 });
