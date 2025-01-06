@@ -1,8 +1,7 @@
 import { memo, useMemo } from "react";
 import type { ShikiLanguage } from "@lib/data/languageIconAliases";
 import type { DirectiveInfo } from "../utils/extractDirectives";
-import type { ThemedToken } from "shiki";
-import { shiki } from "../utils/shiki";
+import { shikiHighlighter, type ThemedToken } from "../utils/shiki";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import "./themeDarkModern.scss";
@@ -25,7 +24,7 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
 
   // Highlight the code with Shiki
   const tokens = useMemo(() => {
-    return shiki.codeToTokens(code, {
+    return shikiHighlighter.codeToTokens(code, {
       lang: lang as ShikiLanguage,
       theme: "class-theme",
       includeExplanation: process.env.NODE_ENV === "development",

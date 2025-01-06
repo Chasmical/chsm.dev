@@ -1,45 +1,49 @@
 import type { BundledLanguage as ShikiBundledLanguage } from "shiki";
 
+// [shiki grammar, seti icon, ...aliases][]
 const languageIconAliasesConst = [
-  // Shiki, Seti, ...aliases
-  ["ini", "config"],
-  ["csharp", "c-sharp", "cs", "dotnet"],
-  ["fsharp", "f-sharp", "fs"],
-  ["c", "c", "h"],
-  ["javascript", "javascript", "js"],
-  ["typescript", "typescript", "ts"],
-  ["xml", "xml", "csproj", "props", "targets"],
+  // Some languages use their supersets' grammars, to minimize bundle size
+
+  // Webdev languages
+  ["tsx", "javascript", "js"], // Prefer TSX over TS/JS/JSX
+  ["tsx", "typescript", "ts", "react"],
   ["html", "html"],
   ["html", "svg"], // Custom purplish icon (see public/ folder)
+  ["scss", "css"], // Prefer SCSS over CSS
+  ["scss", "sass"],
+
+  // Other languages
+  ["csharp", "c-sharp", "cs", "dotnet"],
+  ["fsharp", "f-sharp", "fs"],
+  ["cpp", "c", "h"], // Prefer C++ over C
+  ["cpp", "cpp", "c++"],
+  ["rust", "rust", "rs"],
+  ["python", "python", "py"],
+
+  // Data formats
+  ["ini", "config"],
+  ["xml", "xml", "csproj", "props", "targets"],
+  ["jsonc", "json"], // Prefer JSON with comments
   ["yaml", "yml"],
+  ["csv", "csv"],
+
+  // Other
   ["markdown", "markdown", "md"],
   ["mdx", "markdown"],
+  ["latex", "tex", "katex"],
+  [undefined, "hex"],
+
+  // Configuration files
   [undefined, "git", "gitignore", "gitattributes"],
+  [undefined, "editorconfig"],
+  [undefined, "eslint"],
+  [undefined, "license"],
   ["shellscript", "shell", "bash", "sh", "zsh"],
   ["powershell", "powershell", "ps", "ps1"],
-  ["python", "python", "py"],
-  [undefined, "editorconfig"],
-  ["cpp", "cpp", "c++"],
-  ["css", "css"],
-  ["scss", "sass"],
-  ["csv", "csv"],
   ["docker", "docker", "dockerfile"],
-  [undefined, "eslint"],
-  ["go", "go2"], // Prefer "GO" logo over Gopher mascot
-  [undefined, "hex"],
-  ["jsonc", "json"], // Prefer JSON with comments
   ["jsonc", "tsconfig"],
-  ["kotlin", "kotlin", "kt", "kts"],
-  ["less", "less"],
-  [undefined, "license"],
-  ["lua", "lua"],
   ["make", "makefile"],
-  ["php", "php"],
-  ["jsx", "react"],
-  ["tsx", "react"],
-  ["rust", "rust", "rs"],
-  ["java", "java"],
-  ["latex", "tex", "katex"],
+
   // [undefined, "default"], // Custom light-gray icon (see public/ folder)
 ] as const;
 
