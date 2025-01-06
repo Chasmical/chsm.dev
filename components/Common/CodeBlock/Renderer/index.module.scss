@@ -1,7 +1,5 @@
 .block, .inline {
   background-color: #1e1e1e;
-  font-size: 13px;
-  line-height: 18px;
 
   ::selection {
     background-color: #007acc99;
@@ -10,6 +8,8 @@
 
 .block {
   display: grid;
+  font-size: 13px;
+  line-height: 18px;
   cursor: text;
   width: max-content;
   min-width: 100%;
@@ -24,6 +24,8 @@
 }
 .inline {
   display: inline;
+  font-size: 0.8125em;
+  line-height: 1.2em;
   border: 1px solid var(--color-border-lighter);
   border-radius: 0.375em;
   padding: 0.125em 0.25em;
