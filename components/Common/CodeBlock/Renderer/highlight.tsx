@@ -47,7 +47,7 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
   const renderToken = (token: ThemedToken, key: number): React.ReactNode => {
     if (!token.content.trim()) return token.content;
 
-    if (process.env.NODE_ENV === "development" && token.color?.includes("TODO")) {
+    if (process.env.NODE_ENV === "development" && token.color?.includes("_")) {
       console.log(token.explanation);
     }
 
