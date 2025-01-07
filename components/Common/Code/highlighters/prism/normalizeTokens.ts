@@ -1,25 +1,28 @@
-import type { RefractorRoot as RfRoot, RefractorElement as RfElem, Text } from "refractor";
-import { mapPrismClass } from "./theme";
+import type { RefractorRoot, RefractorElement as RfElem, Text } from "refractor";
+import type { Root } from "hast";
 
 type RefractorElement = Omit<RfElem, "children"> & {
   properties: { className: string[] };
   children: (RefractorElement | Text)[];
 };
 
-export type RefractorToken = { content: string; className: string };
+export type RefractorToken = { content: string; className?: string };
 
 const newLineRegex = /\r?\n|\r/g;
 
 /**
  * Transforms the Refractor's AST into a 2D array of tokens, grouped by line.
  */
-export default function normalizeTokens(ast: RfRoot): RefractorToken[][] {
+export default function normalizeTokens(
+  ast: RefractorRoot | Root,
+  mapClassName: (className: string[] | undefined) => string | undefined,
+): RefractorToken[][] {
   let traversingLine: RefractorToken[] = [];
   const traversedLines = [traversingLine];
 
   // Traverse the entire tree and build a list of nodes grouped by line
   function traverse(parent: RefractorElement) {
-    const className = mapPrismClass(parent.properties?.className[1]);
+    const className = mapClassName(parent.properties?.className);
 
     for (const child of parent.children) {
       if (child.type === "text") {

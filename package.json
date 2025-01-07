@@ -20,6 +20,7 @@
     "js-yaml": "^4.1.0",
     "katex": "^0.16.18",
     "lodash": "^4.17.21",
+    "lowlight": "^3.3.0",
     "mdast-util-to-string": "^4.0.0",
     "nanoid": "^5.0.9",
     "next": "15.1.2",

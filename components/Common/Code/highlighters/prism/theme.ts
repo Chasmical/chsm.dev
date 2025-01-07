@@ -45,7 +45,7 @@ const classShorthands = {
   ["template-punctuation"]: "s",
 } as const;
 
-export function mapPrismClass(prismClass: string) {
+export function mapPrismClass(prismClass: string[] | undefined) {
   // Map Prism's default class names to short ones
-  return "sh-" + (classShorthands[prismClass as never] ?? "i");
+  return "sh-" + (classShorthands[prismClass?.[1] as never] ?? "i");
 }

@@ -1,6 +1,7 @@
 import { findShikiLanguage, type ShikiLanguage } from "@lib/data/languageIconAliases";
 import { refractor, type Syntax as RefractorSyntax } from "refractor/lib/core";
 import normalizeTokens, { type RefractorToken } from "./normalizeTokens";
+import { mapPrismClass } from "./theme";
 
 /*
  * This is the core Prism/refractor module, that:
@@ -29,7 +30,7 @@ export const name = "prism";
 
 export function tokenize(code: string, lang: string) {
   const ast = refractor.highlight(code, lang);
-  return normalizeTokens(ast);
+  return normalizeTokens(ast, mapPrismClass);
 }
 export function renderToken(token: RefractorToken, key: number): React.ReactNode {
   if (!token.content.trim()) return token.content;

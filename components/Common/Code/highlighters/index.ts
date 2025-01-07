@@ -19,12 +19,14 @@ export interface Highlighter<Token = unknown, Lang = string> {
 
 // Define loaders for the available highlighters
 
-export type HighlighterName = "shiki" | "prism";
+export type HighlighterName = "shiki" | "prism" | "hljs";
 
 export const shiki = createLoader(() => import("./shiki/core"));
 export const prism = createLoader(() => import("./prism/core"));
+export const hljs = createLoader(() => import("./hljs/core"));
 
 export const highlighters: Record<HighlighterName, Loader<Highlighter>> = {
   shiki: shiki as never,
   prism: prism as never,
+  hljs: hljs as never,
 };
