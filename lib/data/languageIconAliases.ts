@@ -5,18 +5,19 @@ const languageIconAliasesConst = [
   // Some languages use their supersets' grammars, to minimize bundle size
 
   // Webdev languages
-  ["tsx", "javascript", "js"], // Prefer TSX over TS/JS/JSX
-  ["tsx", "typescript", "ts", "react"],
+  ["tsx", "react", "jsx"],
+  ["tsx", "typescript", "ts"], // Prefer TSX over TS/JS/JSX
+  ["tsx", "javascript", "js"],
   ["html", "html"],
   ["html", "svg"], // Custom purplish icon (see public/ folder)
-  ["scss", "css"], // Prefer SCSS over CSS
   ["scss", "sass"],
+  ["scss", "css"], // Prefer SCSS over CSS
 
   // Other languages
   ["csharp", "c-sharp", "cs", "dotnet"],
   ["fsharp", "f-sharp", "fs"],
-  ["cpp", "c", "h"], // Prefer C++ over C
   ["cpp", "cpp", "c++"],
+  ["cpp", "c", "h"], // Prefer C++ over C
   ["rust", "rust", "rs"],
   ["python", "python", "py"],
 
