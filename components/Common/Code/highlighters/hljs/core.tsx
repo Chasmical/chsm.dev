@@ -26,7 +26,7 @@ export async function importLang(languageName: string | undefined) {
       if (Array.isArray(getGrammar)) {
         let dependencies: string[];
         [getGrammar, ...dependencies] = getGrammar;
-        [grammar] = await Promise.all([getGrammar(), dependencies.map(importLang)]);
+        [grammar] = await Promise.all([getGrammar(), ...dependencies.map(importLang)]);
       } else {
         grammar = await getGrammar();
       }

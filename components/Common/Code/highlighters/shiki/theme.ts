@@ -11,6 +11,7 @@ const classShorthands = {
   keywordControl: "K",
   operator: "o",
   punctuation: "p",
+  plainText: "p",
   punctuationTag: "P",
 
   number: "n",

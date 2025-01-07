@@ -44,15 +44,15 @@ export function tokenize(code: string, lang: string) {
   return highlighter.codeToTokens(code, {
     lang,
     theme: classTheme.name!,
-    // includeExplanation: process.env.NODE_ENV === "development",
+    includeExplanation: process.env.NODE_ENV === "development",
   }).tokens;
 }
 export function renderToken(token: ShikiToken, key: number) {
   if (!token.content.trim()) return token.content;
 
-  // if (process.env.NODE_ENV === "development" && token.color?.includes("_")) {
-  //   console.log(token.explanation);
-  // }
+  if (process.env.NODE_ENV === "development" && token.color?.includes("_")) {
+    console.log(token.explanation);
+  }
 
   return (
     <span key={key} className={token.color}>

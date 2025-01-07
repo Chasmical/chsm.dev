@@ -2,56 +2,64 @@
 const classShorthands = {
   DEBUG: "_",
 
+  subst: "p",
+
+  punctuation: "p",
+  operator: "o",
   keyword: "k",
   literal: "k",
   symbol: "k",
+  meta: "k",
   name: "k",
-  link: "_",
+  comment: "q",
+  doctag: "k",
+  params: "p",
+  xml: "p",
+  tag: "P",
 
   built_in: "c",
   type: "c",
   number: "n",
-  class: "c",
   string: "s",
   regexp: "r",
-  ["template-tag"]: "r",
-
-  subst: "_",
-  function: "f",
   title: "i",
+  class: "c",
+  inherited: "c",
+  function: "f",
+  invoke: "f",
 
-  params: "p",
-  formula: "_",
-  comment: "q",
-  quote: "_",
-  doctag: "_",
-  meta: "_",
-  tag: "P",
+  formula: "k",
+  quote: "mq",
+  link: "mu",
+  section: "mh",
+  emphasis: "mi",
+  strong: "mb",
+  code: "mc",
+  bullet: "ml",
 
   variable: "i",
-  ["template-variable"]: "_",
+  constant: "D",
+  language: "i",
   attr: "i",
-  attribute: "_",
+  attribute: "i",
   property: "i",
 
-  section: "_",
-  emphasis: "_",
-  strong: "_",
+  "selector-tag": "g",
+  "selector-id": "g",
+  "selector-class": "g",
+  "selector-pseudo": "g",
+  "selector-attr": "i",
 
-  bullet: "_",
-  ["selector-tag"]: "_",
-  ["selector-id"]: "_",
-  ["selector-class"]: "_",
-  ["selector-attr"]: "_",
-  ["selector-pseudo"]: "_",
+  "template-tag": "_",
+  "template-variable": "_",
 
   addition: "n",
   deletion: "s",
 } as const;
 
-export function mapHljsClass(hljsClass: string[] | undefined) {
+export function mapHljsClass(hljsClass: string[]) {
   // Map highlight.js's default class names to short ones
-  const className = hljsClass?.at(-1)!.replace("_", "");
+  const className = hljsClass.at(-1)!.replace(/_+$/, "");
   const short = classShorthands[className as keyof typeof classShorthands];
-  return short ? "sh-" + short : undefined;
+  return "sh-" + (short ?? "_ " + hljsClass.join(" "));
 }

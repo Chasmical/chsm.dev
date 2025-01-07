@@ -15,17 +15,19 @@ const newLineRegex = /\r?\n|\r/g;
  */
 export default function normalizeTokens(
   ast: RefractorRoot | Root,
-  mapClassName: (className: string[] | undefined) => string | undefined,
+  mapClassName: (className: string[]) => string | undefined,
 ): RefractorToken[][] {
   let traversingLine: RefractorToken[] = [];
   const traversedLines = [traversingLine];
 
   // Traverse the entire tree and build a list of nodes grouped by line
   function traverse(parent: RefractorElement) {
-    const className = mapClassName(parent.properties?.className);
+    const classNames = parent.properties?.className;
+    const className = classNames && mapClassName(classNames);
 
     for (const child of parent.children) {
       if (child.type === "text") {
+        newLineRegex.lastIndex = 0;
         if (newLineRegex.test(child.value)) {
           // Split the multi-line text node
           const split = child.value.split(newLineRegex);

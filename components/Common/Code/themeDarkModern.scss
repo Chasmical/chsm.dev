@@ -7,8 +7,9 @@
 .sh-k { color: #569cd6 } // language keywords
 .sh-K { color: #c586c0 } // return, continue, break
 .sh-o { color: #d4d4d4 } // operators
-.sh-p { color: #d4d4d4 } // punctuation
+.sh-p { color: #d4d4d4 } // punctuation, plain text
 .sh-P { color: #808080 } // <> for html-like tags
+.sh-D { color: #646695 } // all-uppercase constants, #define
 
 .sh-n { color: #b5cea8 } // numbers
 .sh-s { color: #ce9178 } // strings
@@ -22,4 +23,13 @@
 .sh-C { color: #4ec9b0 } // components
 .sh-f { color: #dcdcaa } // functions
 
+.sh-mb { font-weight: bold } // markdown bold
+.sh-mi { font-style: italic } // markdown italic
+.sh-mh { font-weight: bold; text-decoration: underline } // markdown heading
+.sh-mu { text-decoration: underline } // markdown underline
+.sh-mq { color: #808080; font-style: italic } // markdown quote
+.sh-mc { color: #6a9955 } // markdown code
+.sh-ml { color: #569cd6 } // markdown list item
+
 .sh-_ { color: magenta } // unstyled tokens, only in development env
+.sh-_2 { color: gold }

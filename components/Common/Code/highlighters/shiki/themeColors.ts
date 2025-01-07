@@ -48,9 +48,9 @@ export const shikiTokenColors: ShikiTokenColor[] = [
   { scope: "punctuation.definition.list.begin.markdown", settings: { foreground: "#6796e6" } },
   { scope: "markup.inline.raw", settings: { foreground: "#ce9178" } },
   { scope: "punctuation.definition.tag", settings: { foreground: "punctuationTag" } },
-  { scope: "meta.preprocessor", settings: { foreground: "#569cd6" } },
-  { scope: "meta.preprocessor.string", settings: { foreground: "#ce9178" } },
-  { scope: "meta.preprocessor.numeric", settings: { foreground: "#b5cea8" } },
+  { scope: "meta.preprocessor", settings: { foreground: "keyword" } },
+  { scope: "meta.preprocessor.string", settings: { foreground: "string" } },
+  { scope: "meta.preprocessor.numeric", settings: { foreground: "number" } },
   { scope: "meta.structure.dictionary.key.python", settings: { foreground: "#9cdcfe" } },
   { scope: "meta.diff.header", settings: { foreground: "#569cd6" } },
   { scope: "storage", settings: { foreground: "keyword" } },
@@ -79,10 +79,12 @@ export const shikiTokenColors: ShikiTokenColor[] = [
       "punctuation.accessor",
       "punctuation.curlybrace",
       "meta.brace.round",
+      "meta.brace.square",
     ],
     settings: { foreground: "punctuation" },
   },
   { scope: "meta.template.expression", settings: { foreground: "#d4d4d4" } },
+  { scope: "meta.jsx.children", settings: { foreground: "plainText" } },
   {
     scope: [
       "support.type.vendored.property-name",
@@ -175,7 +177,7 @@ export const shikiTokenColors: ShikiTokenColor[] = [
     scope: ["variable", "meta.definition.variable.name", "support.variable", "entity.name.variable"],
     settings: { foreground: "identifier" },
   },
-  { scope: ["meta.object-literal.key"], settings: { foreground: "identifier" } },
+  { scope: "meta.object-literal.key", settings: { foreground: "identifier" } },
   {
     scope: [
       "support.constant.property-value",
