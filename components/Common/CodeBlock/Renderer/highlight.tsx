@@ -1,7 +1,6 @@
 import { memo, useMemo } from "react";
-import type { ShikiLanguage } from "@lib/data/languageIconAliases";
 import type { DirectiveInfo } from "../utils/extractDirectives";
-import { shikiHighlighter, type ThemedToken } from "../utils/shiki";
+import { getShikiSync, type ShikiToken, type ShikiLanguage } from "../shiki";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import "./themeDarkModern.scss";
@@ -24,8 +23,11 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
 
   // Highlight the code with Shiki
   const tokens = useMemo(() => {
-    return shikiHighlighter.codeToTokens(code, {
-      lang: lang as ShikiLanguage,
+    // Assume that Shiki and the required language are already loaded
+    const { highlighter } = getShikiSync()!;
+
+    return highlighter.codeToTokens(code, {
+      lang,
       theme: "class-theme",
       includeExplanation: process.env.NODE_ENV === "development",
     }).tokens;
@@ -42,8 +44,8 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
     };
   };
 
-  // Function to render a themed token (shiki)
-  const renderToken = (token: ThemedToken, key: number): React.ReactNode => {
+  // Function to render a Shiki token
+  const renderToken = (token: ShikiToken, key: number): React.ReactNode => {
     if (!token.content.trim()) return token.content;
 
     if (process.env.NODE_ENV === "development" && token.color?.includes("_")) {
@@ -56,8 +58,8 @@ const CodeBlockHighlightRenderer = memo(function CodeBlockHighlightRenderer(prop
       </span>
     );
   };
-  // Function to render one line of themed tokens (shiki)
-  const renderLine = (tokens: ThemedToken[], index: number) => {
+  // Function to render one line of Shiki tokens
+  const renderLine = (tokens: ShikiToken[], index: number) => {
     return (
       <span key={index} {...getLineProps(index)}>
         {tokens.map(renderToken)}

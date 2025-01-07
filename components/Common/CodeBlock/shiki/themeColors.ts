@@ -1,4 +1,12 @@
-import type { ShikiTokenColor } from "./shikiTheme";
+import type { ClassShorthand } from "./theme";
+
+export interface ShikiTokenColor {
+  scope: string | string[];
+  settings: {
+    fontStyle?: string;
+    foreground?: ClassShorthand | `#${string}`;
+  };
+}
 
 // The `slack-dark` theme, but with classes
 

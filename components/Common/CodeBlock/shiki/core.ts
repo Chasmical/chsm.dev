@@ -1,22 +1,41 @@
 import { findShikiLanguage, type ShikiLanguage } from "@lib/data/languageIconAliases";
-import type { LanguageRegistration } from "shiki";
-import { shikiHighlighter } from "./shiki";
+import { createHighlighterCore, type LanguageRegistration } from "shiki/core";
+import { createOnigurumaEngine } from "shiki/engine/oniguruma";
+import classTheme from "./theme";
 
-export default async function importShikiLanguage(languageName: string | undefined) {
+/*
+ * This is the core Shiki module, that:
+ * - Imports the base Shiki functionality, shiki/core.
+ * - Imports the onigurama engine factory, shiki/engune/oniguruma.
+ * - Imports the onigurama WASM, shiki/wasm.
+ * - Initializes a highlighter with a class theme.
+ *
+ * This module is lazy-loaded by methods in ./index.ts
+ */
+
+/** Singleton Shiki highlighter */
+export const highlighter = await createHighlighterCore({
+  langs: [],
+  themes: [classTheme],
+  engine: createOnigurumaEngine(import("shiki/wasm")),
+});
+
+/** Imports a Shiki grammar by a language name or alias, then returns the language's Shiki name. */
+export async function importLang(languageName: string | undefined) {
   const lang = findShikiLanguage(languageName);
-
-  try {
-    if (lang && !shikiHighlighter.getLoadedLanguages().includes(lang)) {
+  if (lang) {
+    try {
       const grammar = await importMap[lang]();
-      await shikiHighlighter.loadLanguage(grammar);
+      await highlighter.loadLanguage(grammar);
+      return lang;
+    } catch (err) {
+      console.error(`"${lang}" is not a valid Shiki language.`);
+      console.error(err);
     }
-    return lang;
-  } catch (err) {
-    console.error(`"${lang}" is not a valid Shiki language.`);
-    console.error(err);
   }
 }
 
+// An import map of some selected grammars, used on the website
 const importMap: Record<ShikiLanguage, () => Promise<{ default: LanguageRegistration[] }>> = {
   tsx: () => import("@shikijs/langs/tsx"),
   html: () => import("@shikijs/langs/html"),

@@ -1,9 +1,10 @@
+import { useMemo } from "react";
 import type { LanguageOrIconAlias, ShikiLanguage } from "@lib/data/languageIconAliases";
-import importShikiLanguage from "./utils/importShikiLanguage";
+import { getShiki } from "./shiki";
+import stringifyChildren from "./utils/stringifyChildren";
 import useShikiLanguage from "./utils/useShikiLanguage";
-import { stringifyChildren } from "./utils/useCodeProcessor";
-import CodeBlockHighlightRenderer from "./Renderer/highlight";
 import CodeBlockPlainRenderer from "./Renderer/plain";
+import CodeBlockHighlightRenderer from "./Renderer/highlight";
 import { rsc } from "rsc-env";
 
 export type { LanguageOrIconAlias, ShikiLanguage } from "@lib/data/languageIconAliases";
@@ -17,10 +18,13 @@ export interface InlineCodeBlockProps {
 }
 
 export default function InlineCodeBlock({ lang, children, ...props }: InlineCodeBlockProps) {
-  const code = stringifyChildren(children).join("\n");
+  // Stringify the children
+  const code = useMemo(() => stringifyChildren(children).join("\n"), [children]);
 
   if (rsc) {
-    return importShikiLanguage(lang).then(compositeInline);
+    return getShiki()
+      .then(shiki => shiki.importLang(lang))
+      .then(compositeInline);
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
