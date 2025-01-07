@@ -1,7 +1,6 @@
 import type { MdxComponents } from "@lib/mdx";
 import Link from "@components/Common/Link";
-import CodeBlock, { ShikiLanguage } from "@components/Common/CodeBlock";
-import InlineCodeBlock, { InlineCodeBlockProps } from "@components/Common/CodeBlock/inline";
+import CodeBlock, { CodeBlockProps, ShikiLanguage } from "@components/Common/CodeBlock";
 import Heading, { HeadingProps } from "@components/Common/Heading";
 import InlineCssColor from "@components/Specialized/InlineCssColor";
 import Embed from "@components/Specialized/Embed";
@@ -15,7 +14,7 @@ function makeHeading(depth: 1 | 2 | 3 | 4 | 5 | 6) {
 const preRegex = /^\/\*pre[=:](.+?)\*\//;
 const langRegex = /\/\/lang[=:]([a-z0-9-]+)$/;
 
-function InlineCode({ children, ...props }: InlineCodeBlockProps) {
+function InlineCode({ children, ...props }: CodeBlockProps) {
   let lang: ShikiLanguage | undefined;
   if (typeof children === "string") {
     const matchLang = langRegex.exec(children);
@@ -29,9 +28,9 @@ function InlineCode({ children, ...props }: InlineCodeBlockProps) {
     }
   }
   return (
-    <InlineCodeBlock lang={lang} {...props}>
+    <CodeBlock lang={lang} {...props} inline>
       {children}
-    </InlineCodeBlock>
+    </CodeBlock>
   );
 }
 

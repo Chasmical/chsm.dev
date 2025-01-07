@@ -1,18 +1,18 @@
-import Code from "@components/Common/Code";
 import styles from "./index.module.scss";
+import clsx from "clsx";
 
 export interface InlineCssColorProps extends React.HTMLAttributes<HTMLElement> {
   color: string;
-  // ...props
   className?: string;
+  // ...props
   style?: React.CSSProperties;
 }
 
-export default function InlineCssColor({ color, ...props }: InlineCssColorProps) {
+export default function InlineCssColor({ color, className, ...props }: InlineCssColorProps) {
   return (
-    <Code {...props}>
+    <code className={clsx(styles.code, className)} {...props}>
       <span className={styles.color} style={{ backgroundColor: color }} />
       {color}
-    </Code>
+    </code>
   );
 }

@@ -5,28 +5,30 @@ import stringifyChildren from "./utils/stringifyChildren";
 import extractDirectives from "./utils/extractDirectives";
 import useShikiLanguage from "./utils/useShikiLanguage";
 import CodeBlockContainer from "./Container";
-import CodeBlockPlainRenderer from "./Renderer/plain";
-import CodeBlockHighlightRenderer from "./Renderer/highlight";
+import CodeBlockRenderer from "./Renderer";
 import { rsc } from "rsc-env";
+import styles from "./Renderer/index.module.scss";
+import clsx from "clsx";
 
 export type { LanguageOrIconAlias, ShikiLanguage } from "@lib/data/languageIconAliases";
 
 export interface CodeBlockProps {
   lang?: LanguageOrIconAlias | (string & {});
-  nonums?: boolean;
   children?: React.ReactNode;
+  inline?: boolean;
   // ...props
   title?: string;
+  nonums?: boolean;
   nocopy?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export default function CodeBlock({ children, nonums, ...props }: CodeBlockProps) {
+export default function CodeBlock({ lang: langName, children, inline, nonums, ...props }: CodeBlockProps) {
   // Stringify the children and extract directives
   const [code, directives] = useMemo(() => {
     const lines = stringifyChildren(children);
-    const directives = extractDirectives(lines);
+    const directives = inline ? undefined : extractDirectives(lines);
 
     return [lines.join("\n"), directives];
   }, [children]);
@@ -45,21 +47,31 @@ export default function CodeBlock({ children, nonums, ...props }: CodeBlockProps
 
   if (rsc) {
     return getShiki()
-      .then(shiki => shiki.importLang(props.lang))
-      .then(compositeBlock);
+      .then(shiki => shiki.importLang(langName))
+      .then(composite);
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const shikiLang = useShikiLanguage(props.lang);
-  return compositeBlock(shikiLang);
+  const shikiLang = useShikiLanguage(langName);
+  return composite(shikiLang);
 
   // Function for the final CodeBlock component render
-  function compositeBlock(shikiLang?: ShikiLanguage) {
-    const Renderer = shikiLang ? CodeBlockHighlightRenderer : CodeBlockPlainRenderer;
+  function composite(shikiLang?: ShikiLanguage) {
+    const renderer = <CodeBlockRenderer lang={shikiLang!} code={code} directives={directives} inline={inline} />;
+
+    if (inline) {
+      return (
+        <code {...props} className={clsx(styles.inline, shikiLang && "shiki language-" + shikiLang, props.className)}>
+          {renderer}
+        </code>
+      );
+    }
 
     return (
-      <CodeBlockContainer {...props}>
-        <Renderer lang={shikiLang!} code={code} directives={directives} nonums={nonums} />
+      <CodeBlockContainer lang={langName} {...props}>
+        <code className={clsx(styles.block, nonums && styles.nonums, shikiLang && "shiki language-" + shikiLang)}>
+          {renderer}
+        </code>
       </CodeBlockContainer>
     );
   }

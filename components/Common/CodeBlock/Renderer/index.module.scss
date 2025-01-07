@@ -1,26 +1,5 @@
 .block, .inline {
   background-color: #1e1e1e;
-
-  ::selection {
-    background-color: #007acc99;
-  }
-}
-
-.block {
-  display: grid;
-  font-size: 13px;
-  line-height: 18px;
-  cursor: text;
-  width: max-content;
-  min-width: 100%;
-  padding: 14px 0;
-  white-space: pre;
-
-  &.nonums > span {
-    padding-left: 1rem;
-    &::before { display: none; }
-    --line-num-offset: 16px;
-  }
 }
 .inline {
   display: inline;
@@ -31,7 +10,24 @@
   padding: 0.125em 0.25em;
   white-space: break-spaces;
 }
+.block {
+  display: grid;
+  font-size: 13px;
+  line-height: 18px;
+  border: none;
+  padding: 14px 0;
+  white-space: pre;
 
+  cursor: text;
+  width: max-content;
+  min-width: 100%;
+
+  ::selection {
+    background-color: #007acc99;
+  }
+}
+
+// Add line numbers to code blocks
 .block > span {
   counter-increment: line;
   transition: background-color 0.2s;
@@ -49,6 +45,15 @@
     transition: color 0.2s;
     color: #6e7681;
   }
+}
+// Remove line numbers if <pre> has nonums class
+.block.nonums > span {
+  padding-left: 1rem;
+  &::before { display: none; }
+  --line-num-offset: 16px;
+}
+
+.block > span {
   &:hover {
     background-color: #88888818;
     &::before { color: #cccccc; }

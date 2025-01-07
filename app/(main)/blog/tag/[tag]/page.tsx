@@ -9,7 +9,7 @@ import configureComponents from "@lib/mdx/configure-components";
 import BlogLayout from "@components/Blog/BlogLayout";
 import BlogSidebar from "@components/Blog/BlogSidebar";
 import BlogArticle from "@components/Blog/BlogArticle";
-import Code from "@components/Common/Code";
+import { PostTag } from "@components/Blog/BlogArticle/HeaderTags";
 import { decodeUriParams } from "@lib/utils/decodeUri";
 import joinList from "@lib/utils/joinList";
 import plural from "@lib/utils/plural";
@@ -66,7 +66,7 @@ export default async function BlogPostsByTagPage(props: PageProps) {
           <h2 style={{ marginBottom: "2rem" }}>
             {joinList(tags, {
               prefix: () => `Found ${plural(matchedPosts.length, "post")} with `,
-              map: (tag, i) => <Code key={i}>{tag.replaceAll("_", " ")}</Code>,
+              map: (tag, i) => <PostTag key={i} tag={tag} />,
               join: ", ",
               suffix: " tag:",
             })}
