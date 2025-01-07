@@ -1,7 +1,9 @@
 import { findShikiLanguage, type ShikiLanguage } from "@lib/data/languageIconAliases";
-import { createHighlighterCore, type LanguageRegistration } from "shiki/core";
+import { createHighlighterCore, type LanguageRegistration, type ThemedToken as ShikiToken } from "shiki/core";
 import { createOnigurumaEngine } from "shiki/engine/oniguruma";
 import classTheme from "./theme";
+
+export type { ShikiLanguage, ShikiToken };
 
 /*
  * This is the core Shiki module, that:
@@ -9,8 +11,9 @@ import classTheme from "./theme";
  * - Imports the onigurama engine factory, shiki/engune/oniguruma.
  * - Imports the onigurama WASM, shiki/wasm.
  * - Initializes a highlighter with a class theme.
+ * - Imports highlighter grammars on demand.
  *
- * This module is lazy-loaded by methods in ./index.ts
+ * This module is lazy-loaded by ../index.ts
  */
 
 /** Singleton Shiki highlighter */
@@ -33,6 +36,29 @@ export async function importLang(languageName: string | undefined) {
       console.error(err);
     }
   }
+}
+
+export const name = "shiki";
+
+export function tokenize(code: string, lang: string) {
+  return highlighter.codeToTokens(code, {
+    lang,
+    theme: classTheme.name!,
+    // includeExplanation: process.env.NODE_ENV === "development",
+  }).tokens;
+}
+export function renderToken(token: ShikiToken, key: number) {
+  if (!token.content.trim()) return token.content;
+
+  // if (process.env.NODE_ENV === "development" && token.color?.includes("_")) {
+  //   console.log(token.explanation);
+  // }
+
+  return (
+    <span key={key} className={token.color}>
+      {token.content}
+    </span>
+  );
 }
 
 // An import map of some selected grammars, used on the website

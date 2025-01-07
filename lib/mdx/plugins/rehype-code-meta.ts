@@ -13,8 +13,18 @@ export default function rehypeCodeMeta(_options?: unknown): Transformer<Nodes> {
       // Select <pre> nodes with a <code> child
       if (codeNode.tagName !== "code" || preNode?.type !== "element" || preNode.tagName !== "pre") return;
 
-      // Parse the metadata and assign it to properties
-      Object.assign((preNode.properties ??= {}), parseMeta(codeNode.data?.meta as string | undefined));
+      // Get the node's metadata string
+      let meta = codeNode.data?.meta ?? "";
+
+      // Process the highlighter directive: @shiki / @prism
+      const highlighterMatch = /^@([a-z]+)/.exec(meta);
+      if (highlighterMatch) {
+        preNode.properties.highlighter = highlighterMatch[1];
+        meta = meta.slice(highlighterMatch[0].length);
+      }
+
+      // Parse the metadata attributes and assign them to properties
+      Object.assign((preNode.properties ??= {}), parseAttributes(meta));
 
       // Extract and set the language from className
       const className = String([codeNode.properties?.className].flat()[0]);
@@ -27,9 +37,8 @@ export default function rehypeCodeMeta(_options?: unknown): Transformer<Nodes> {
 
 const MetaAttributeRegex = /([^\s=]+)(?:="([^"]+)"|=([^\s]+))?/g;
 
-function parseMeta(meta: string | undefined): Record<string, unknown> | undefined {
-  meta = meta?.trim();
-  if (meta) {
+function parseAttributes(meta: string): Record<string, unknown> | undefined {
+  if (meta.trim()) {
     const matches = [...meta.matchAll(MetaAttributeRegex)];
     const entries = matches.map(([, key, quoted, unquoted]) => [key, quoted ?? unquoted ?? true]);
     return Object.fromEntries(entries);

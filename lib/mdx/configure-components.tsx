@@ -1,6 +1,6 @@
 import type { MdxComponents } from "@lib/mdx";
 import Link from "@components/Common/Link";
-import CodeBlock, { CodeBlockProps, ShikiLanguage } from "@components/Common/CodeBlock";
+import { CodeBlock, InlineCode, InlineCodeProps } from "@components/Common/Code";
 import Heading, { HeadingProps } from "@components/Common/Heading";
 import InlineCssColor from "@components/Specialized/InlineCssColor";
 import Embed from "@components/Specialized/Embed";
@@ -12,14 +12,13 @@ function makeHeading(depth: 1 | 2 | 3 | 4 | 5 | 6) {
 }
 
 const preRegex = /^\/\*pre[=:](.+?)\*\//;
-const langRegex = /\/\/lang[=:]([a-z0-9-]+)$/;
+const langRegex = /\/\/lang[=:]([a-z0-9-]+(?:@[a-z]+)?)$/;
 
-function InlineCode({ children, ...props }: CodeBlockProps) {
-  let lang: ShikiLanguage | undefined;
+function InlineCodeWrapper({ children, ...props }: InlineCodeProps) {
   if (typeof children === "string") {
     const matchLang = langRegex.exec(children);
     if (matchLang) {
-      lang = matchLang[1] as ShikiLanguage;
+      [props.lang, props.highlighter] = matchLang[1].split("@") as never[];
       children = children.slice(0, matchLang.index);
     }
     const matchPre = preRegex.exec(children as string);
@@ -27,11 +26,8 @@ function InlineCode({ children, ...props }: CodeBlockProps) {
       children = matchPre[1] + "\n" + (children as string).slice(matchPre[0].length);
     }
   }
-  return (
-    <CodeBlock lang={lang} {...props} inline>
-      {children}
-    </CodeBlock>
-  );
+
+  return <InlineCode {...props}>{children}</InlineCode>;
 }
 
 export default function configureComponents(_config?: unknown): MdxComponents {
@@ -39,7 +35,7 @@ export default function configureComponents(_config?: unknown): MdxComponents {
     em: "i",
     strong: "b",
     a: Link,
-    code: InlineCode,
+    code: InlineCodeWrapper,
     pre: CodeBlock,
     h1: makeHeading(1),
     h2: makeHeading(2),

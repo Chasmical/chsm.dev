@@ -47,7 +47,7 @@
   }
 }
 // Remove line numbers if <pre> has nonums class
-.block.nonums > span {
+pre:global(.nonums) > .block > span {
   padding-left: 1rem;
   &::before { display: none; }
   --line-num-offset: 16px;
@@ -67,7 +67,7 @@
   &.annotate {
     counter-increment: none;
     margin: 0.25rem auto 0.25rem calc(var(--line-num-offset) + var(--offset, 0) * 7.8px);
-    padding: 0.5rem;
+    padding: 0.5rem !important;
     border: 1px solid var(--color-border-lightest);
     border-radius: 0.25rem;
 
@@ -80,7 +80,7 @@
 
     width: calc(var(--width) * 7.8px);
     margin: 0.25rem auto 0.25rem calc(var(--line-num-offset) + var(--offset, 0) * 7.8px);
-    padding: 0.5rem;
+    padding: 0.5rem !important;
     border: 1px solid var(--color-border-lightest);
     border-radius: 0.25rem;
   }

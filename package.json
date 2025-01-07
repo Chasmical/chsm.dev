@@ -27,6 +27,7 @@
     "normalize.css": "^8.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "refractor": "^4.8.1",
     "rehype-katex": "^7.0.1",
     "remark-breaks": "^4.0.0",
     "remark-custom-heading-id": "^2.0.0",

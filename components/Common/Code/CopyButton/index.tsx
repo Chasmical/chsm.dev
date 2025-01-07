@@ -1,10 +1,14 @@
 "use client";
 import { useRef } from "react";
-import Icon from "@components/Common/Icon";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-export default function CodeBlockCopyButton({ float }: { float?: boolean }) {
+export interface CodeCopyButtonProps {
+  float?: boolean;
+  icon: React.ReactNode;
+}
+
+export default function CodeCopyButton({ float, icon }: CodeCopyButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const copyContents = () => {
@@ -15,7 +19,7 @@ export default function CodeBlockCopyButton({ float }: { float?: boolean }) {
 
   return (
     <button ref={buttonRef} className={clsx(styles.copyButton, float && styles.floating)} onClick={copyContents}>
-      <Icon type="copy" size={24} />
+      {icon}
     </button>
   );
 }
