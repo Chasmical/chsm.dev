@@ -27,9 +27,6 @@
 .sh-mi { font-style: italic } // markdown italic
 .sh-mh { font-weight: bold; text-decoration: underline } // markdown heading
 .sh-mu { text-decoration: underline } // markdown underline
-.sh-mq { color: #808080; font-style: italic } // markdown quote
-.sh-mc { color: #6a9955 } // markdown code
-.sh-ml { color: #569cd6 } // markdown list item
 
-.sh-_ { color: magenta } // unstyled tokens, only in development env
+.sh-_ { color: magenta } // unstyled tokens, for debugging
 .sh-_2 { color: gold }

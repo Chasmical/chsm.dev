@@ -43,13 +43,15 @@ const classShorthands = {
   script: "i",
   spread: "i",
   "script-punctuation": "p",
-  "code-snippet": "mc",
-  list: "ml",
-  blockquote: "mq",
-
-  bold: "_",
-  italic: "_",
+  "code-snippet": "s",
+  "code-block": "s",
+  "code-language": "i",
   title: "mh",
+  list: "k",
+  blockquote: "q",
+
+  bold: "mb",
+  italic: "mi",
   content: "i",
 
   atrule: "_",

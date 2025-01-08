@@ -29,13 +29,13 @@ const classShorthands = {
   invoke: "f",
 
   formula: "k",
-  quote: "mq",
+  quote: "q",
   link: "mu",
   section: "mh",
   emphasis: "mi",
   strong: "mb",
-  code: "mc",
-  bullet: "ml",
+  code: "s",
+  bullet: "k",
 
   variable: "i",
   constant: "D",

@@ -25,6 +25,12 @@ const classShorthands = {
   entityClass: "c",
   entityComponent: "C",
   entityFunction: "f",
+
+  markupHeading: "mh",
+  markupBold: "mb",
+  markupItalic: "mi",
+  markupUnderline: "mu",
+  markupQuote: "q",
 } as const;
 
 export type ClassShorthand = keyof typeof classShorthands;
