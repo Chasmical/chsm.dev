@@ -7,8 +7,11 @@
   border: #{$width} solid var(--color-border-lighter);
   border-radius: 1.5rem;
 
-  background: linear-gradient(var(--color-background-light), var(--color-background) 1200px);
+  background: linear-gradient(var(--color-background-light) -800px, var(--color-background) 1200px);
 
+  &.truncated {
+    background: linear-gradient(var(--color-background-light) 0px, var(--color-background) 1200px);
+  }
   &:not(.truncated) {
     padding-bottom: #{64px + $pad};
   }
