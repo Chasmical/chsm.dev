@@ -6,7 +6,7 @@ export default function stringifyChildren(children: React.ReactNode, results: st
     if (elem?.props?.children != null) {
       stringifyChildren(elem.props.children, results);
     } else {
-      results.push(...("" + (child || "")).split("\n"));
+      results.push(...("" + (child || "")).split(/\r?\n|\r/g));
     }
   });
   if (!results.at(-1)) results.pop();
