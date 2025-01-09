@@ -6,7 +6,7 @@ type RefractorElement = Omit<RfElem, "children"> & {
   children: (RefractorElement | Text)[];
 };
 
-export type RefractorToken = { content: string; className?: string };
+export type PrismToken = { content: string; className?: string };
 
 const newLineRegex = /\r?\n|\r/g;
 
@@ -16,8 +16,8 @@ const newLineRegex = /\r?\n|\r/g;
 export default function normalizeTokens(
   ast: RefractorRoot | Root,
   mapClassName: (className: string[]) => string | undefined,
-): RefractorToken[][] {
-  let traversingLine: RefractorToken[] = [];
+): PrismToken[][] {
+  let traversingLine: PrismToken[] = [];
   const traversedLines = [traversingLine];
 
   // Traverse the entire tree and build a list of nodes grouped by line

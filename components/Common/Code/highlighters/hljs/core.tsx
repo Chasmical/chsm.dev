@@ -1,8 +1,9 @@
 import { findShikiLanguage, type ShikiLanguage } from "@lib/data/languageIconAliases";
-import normalizeTokens, { type RefractorToken as LowlightToken } from "../prism/normalizeTokens";
+import normalizeTokens, { type PrismToken as HljsToken } from "../prism/normalizeTokens";
 import { createLowlight, type LanguageFn } from "lowlight";
 import { mapHljsClass } from "./theme";
 
+export type { HljsToken };
 /*
  * This is the core highlight.js/lowlight module, that:
  * - Imports the base highlight.js/lowlight functionality, lowlight/createLowlight.
@@ -20,7 +21,8 @@ export async function importLang(languageName: string | undefined) {
   if (lang) {
     try {
       let grammar: { default: LanguageFn };
-      let getGrammar = importMap[lang];
+      const hljsLang = (nameMap[lang as never] ?? lang) as HljsLanguage;
+      let getGrammar = importMap[hljsLang];
 
       // Optionally load the grammar's dependencies on other grammars
       if (Array.isArray(getGrammar)) {
@@ -31,9 +33,8 @@ export async function importLang(languageName: string | undefined) {
         grammar = await getGrammar();
       }
 
-      const resolvedName = nameMap[lang] ?? lang;
-      lowlight.register(resolvedName, grammar.default);
-      return resolvedName;
+      lowlight.register(hljsLang, grammar.default);
+      return hljsLang;
     } catch (err) {
       console.error(`"${lang}" is not a valid highlight.js/lowlight language.`);
       console.error(err);
@@ -47,7 +48,7 @@ export function tokenize(code: string, lang: string) {
   const ast = lowlight.highlight(lang, code, { prefix: "" });
   return normalizeTokens(ast, mapHljsClass);
 }
-export function renderToken(token: LowlightToken, key: number): React.ReactNode {
+export function renderToken(token: HljsToken, key: number): React.ReactNode {
   if (!token.content.trim() || !token.className) return token.content;
 
   return (
@@ -61,9 +62,9 @@ type ImportGrammar = () => Promise<{ default: LanguageFn }>;
 type GrammarInfo = ImportGrammar | [ImportGrammar, ...dependencies: string[]];
 
 // An import map of some selected grammars, used on the website
-const importMap: Record<ShikiLanguage, ImportGrammar | GrammarInfo> = {
-  tsx: [() => import("highlight.js/lib/languages/typescript"), "html"],
-  html: () => import("highlight.js/lib/languages/xml"),
+const importMap: Record<HljsLanguage, ImportGrammar | GrammarInfo> = {
+  typescript: [() => import("highlight.js/lib/languages/typescript"), "html"],
+  xml: () => import("highlight.js/lib/languages/xml"),
   scss: () => import("highlight.js/lib/languages/scss"),
   csharp: () => import("highlight.js/lib/languages/csharp"),
   fsharp: () => import("highlight.js/lib/languages/fsharp"),
@@ -71,19 +72,17 @@ const importMap: Record<ShikiLanguage, ImportGrammar | GrammarInfo> = {
   rust: () => import("highlight.js/lib/languages/rust"),
   python: () => import("highlight.js/lib/languages/python"),
   ini: () => import("highlight.js/lib/languages/ini"),
-  xml: () => import("highlight.js/lib/languages/xml"),
-  jsonc: () => import("highlight.js/lib/languages/json"),
+  json: () => import("highlight.js/lib/languages/json"),
   yaml: () => import("highlight.js/lib/languages/yaml"),
-  csv: () => import("highlight.js/lib/languages/plaintext"),
+  plaintext: () => import("highlight.js/lib/languages/plaintext"),
   markdown: () => import("highlight.js/lib/languages/markdown"),
-  mdx: () => import("highlight.js/lib/languages/markdown"),
   latex: () => import("highlight.js/lib/languages/latex"),
-  shellscript: () => import("highlight.js/lib/languages/shell"),
+  shell: () => import("highlight.js/lib/languages/shell"),
   powershell: () => import("highlight.js/lib/languages/powershell"),
-  docker: () => import("highlight.js/lib/languages/dockerfile"),
-  make: () => import("highlight.js/lib/languages/makefile"),
+  dockerfile: () => import("highlight.js/lib/languages/dockerfile"),
+  makefile: () => import("highlight.js/lib/languages/makefile"),
 };
-const nameMap: Partial<Record<ShikiLanguage, string>> = {
+const nameMap = {
   tsx: "typescript",
   html: "xml",
   jsonc: "json",
@@ -92,4 +91,11 @@ const nameMap: Partial<Record<ShikiLanguage, string>> = {
   shellscript: "shell",
   docker: "dockerfile",
   make: "makefile",
-};
+} as const;
+
+type NameMap = typeof nameMap;
+
+export type HljsLanguage = Exclude<ShikiLanguage, keyof NameMap> | NameMap[keyof NameMap];
+
+// Ensure that Highlight.js language names map to existing Shiki language names
+type _Check<T extends ShikiLanguage = keyof NameMap> = T;

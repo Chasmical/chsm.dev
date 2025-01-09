@@ -52,13 +52,11 @@ export type ShikiLanguage = Exclude<(typeof languageIconAliasesConst)[number][0]
 export type SetiIcon = Exclude<(typeof languageIconAliasesConst)[number][1], undefined>;
 export type LanguageOrIconAlias = Exclude<(typeof languageIconAliasesConst)[number][number], undefined>;
 
+// Ensure that the language names map to existing Shiki language names
+type _Check<T extends ShikiBundledLanguage = ShikiLanguage> = T;
+
 type LanguageIconAliases = [shiki: ShikiLanguage | undefined, seti: SetiIcon, ...aliases: string[]];
 const languageIconAliases = languageIconAliasesConst as readonly Readonly<LanguageIconAliases>[];
-
-if (process.env.NODE_ENV === "development") {
-  // Make sure that ShikiLanguage only contains supported languages
-  const _: ShikiBundledLanguage = languageIconAliases[0][0]!;
-}
 
 export function findShikiLanguage(name: string | undefined) {
   if (name) return languageIconAliases.find(aliases => aliases.includes(name))?.[0] as ShikiLanguage | undefined;

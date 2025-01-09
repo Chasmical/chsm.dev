@@ -1,7 +1,9 @@
 import { findShikiLanguage, type ShikiLanguage } from "@lib/data/languageIconAliases";
 import { refractor, type Syntax as RefractorSyntax } from "refractor/lib/core";
-import normalizeTokens, { type RefractorToken } from "./normalizeTokens";
+import normalizeTokens, { type PrismToken } from "./normalizeTokens";
 import { mapPrismClass } from "./theme";
+
+export type { PrismToken };
 
 /*
  * This is the core Prism/refractor module, that:
@@ -16,9 +18,10 @@ export async function importLang(languageName: string | undefined) {
   const lang = findShikiLanguage(languageName);
   if (lang) {
     try {
-      const grammar = await importMap[lang]();
+      const prismLang = (nameMap[lang as never] ?? lang) as PrismLanguage;
+      const grammar = await importMap[prismLang]();
       refractor.register(grammar.default);
-      return nameMap[lang] ?? lang;
+      return prismLang;
     } catch (err) {
       console.error(`"${lang}" is not a valid Prism/refractor language.`);
       console.error(err);
@@ -32,7 +35,7 @@ export function tokenize(code: string, lang: string) {
   const ast = refractor.highlight(code, lang);
   return normalizeTokens(ast, mapPrismClass);
 }
-export function renderToken(token: RefractorToken, key: number): React.ReactNode {
+export function renderToken(token: PrismToken, key: number): React.ReactNode {
   if (!token.content.trim()) return token.content;
 
   return (
@@ -43,9 +46,9 @@ export function renderToken(token: RefractorToken, key: number): React.ReactNode
 }
 
 // An import map of some selected grammars, used on the website
-const importMap: Record<ShikiLanguage, () => Promise<{ default: RefractorSyntax }>> = {
+const importMap: Record<PrismLanguage, () => Promise<{ default: RefractorSyntax }>> = {
   tsx: () => import("refractor/lang/tsx"),
-  html: () => import("refractor/lang/markup"),
+  markup: () => import("refractor/lang/markup"),
   scss: () => import("refractor/lang/scss"),
   csharp: () => import("refractor/lang/csharp"),
   fsharp: () => import("refractor/lang/fsharp"),
@@ -53,23 +56,28 @@ const importMap: Record<ShikiLanguage, () => Promise<{ default: RefractorSyntax 
   rust: () => import("refractor/lang/rust"),
   python: () => import("refractor/lang/python"),
   ini: () => import("refractor/lang/ini"),
-  xml: () => import("refractor/lang/markup"),
-  jsonc: () => import("refractor/lang/json"),
+  json: () => import("refractor/lang/json"),
   yaml: () => import("refractor/lang/yaml"),
   csv: () => import("refractor/lang/csv"),
   markdown: () => import("refractor/lang/markdown"),
-  mdx: () => import("refractor/lang/markdown"),
   latex: () => import("refractor/lang/latex"),
-  shellscript: () => import("refractor/lang/bash"),
+  bash: () => import("refractor/lang/bash"),
   powershell: () => import("refractor/lang/powershell"),
   docker: () => import("refractor/lang/docker"),
-  make: () => import("refractor/lang/makefile"),
+  makefile: () => import("refractor/lang/makefile"),
 };
-const nameMap: Partial<Record<ShikiLanguage, string>> = {
+const nameMap = {
   html: "markup",
   xml: "markup",
   jsonc: "json",
   mdx: "markdown",
   shellscript: "bash",
   make: "makefile",
-};
+} as const;
+
+type NameMap = typeof nameMap;
+
+export type PrismLanguage = Exclude<ShikiLanguage, keyof NameMap> | NameMap[keyof NameMap];
+
+// Ensure that Highlight.js language names map to existing Shiki language names
+type _Check<T extends ShikiLanguage = keyof NameMap> = T;

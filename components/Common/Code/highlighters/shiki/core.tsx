@@ -8,8 +8,8 @@ export type { ShikiLanguage, ShikiToken };
 /*
  * This is the core Shiki module, that:
  * - Imports the base Shiki functionality, shiki/core.
- * - Imports the onigurama engine factory, shiki/engune/oniguruma.
- * - Imports the onigurama WASM, shiki/wasm.
+ * - Imports the onigurama engine factory, shiki/engine/oniguruma.
+ * - Starts asynchronously importing the onigurama WASM, shiki/wasm.
  * - Initializes a highlighter with a class theme.
  * - Imports highlighter grammars on demand.
  *
