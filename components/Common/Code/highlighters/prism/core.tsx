@@ -13,6 +13,11 @@ export type { PrismToken };
  * This module is lazy-loaded by ../index.ts
  */
 
+export const name = "prism";
+
+/** Singleton Prism/refractor highlighter */
+export { refractor as highlighter };
+
 /** Imports a Prism/refractor grammar by a language name or alias, then returns the language's Prism/refractor name. */
 export async function importLang(languageName: string | undefined) {
   const lang = findShikiLanguage(languageName);
@@ -28,10 +33,7 @@ export async function importLang(languageName: string | undefined) {
     }
   }
 }
-
-export const name = "prism";
-
-export function tokenize(code: string, lang: string) {
+export function tokenize(code: string, lang: PrismLanguage) {
   const ast = refractor.highlight(code, lang);
   return normalizeTokens(ast, mapPrismClass);
 }
@@ -77,7 +79,7 @@ const nameMap = {
 
 type NameMap = typeof nameMap;
 
-export type PrismLanguage = Exclude<ShikiLanguage, keyof NameMap> | NameMap[keyof NameMap];
-
 // Ensure that Highlight.js language names map to existing Shiki language names
 type _Check<T extends ShikiLanguage = keyof NameMap> = T;
+
+export type PrismLanguage = Exclude<ShikiLanguage, keyof NameMap> | NameMap[keyof NameMap];

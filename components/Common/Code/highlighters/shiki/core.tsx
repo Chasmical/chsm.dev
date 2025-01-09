@@ -16,6 +16,8 @@ export type { ShikiLanguage, ShikiToken };
  * This module is lazy-loaded by ../index.ts
  */
 
+export const name = "shiki";
+
 /** Singleton Shiki highlighter */
 export const highlighter = await createHighlighterCore({
   langs: [],
@@ -37,10 +39,7 @@ export async function importLang(languageName: string | undefined) {
     }
   }
 }
-
-export const name = "shiki";
-
-export function tokenize(code: string, lang: string) {
+export function tokenize(code: string, lang: ShikiLanguage) {
   return highlighter.codeToTokens(code, {
     lang,
     theme: classTheme.name!,

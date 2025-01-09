@@ -13,7 +13,10 @@ export type { HljsToken };
  * This module is lazy-loaded by ../index.ts
  */
 
-const lowlight = createLowlight();
+export const name = "hljs";
+
+/** Singleton highlight.js/lowlight highlighter */
+export const highlighter = createLowlight();
 
 /** Imports a highlight.js/lowlight grammar by a language name or alias, then returns the language's highlight.js/lowlight name. */
 export async function importLang(languageName: string | undefined) {
@@ -33,7 +36,7 @@ export async function importLang(languageName: string | undefined) {
         grammar = await getGrammar();
       }
 
-      lowlight.register(hljsLang, grammar.default);
+      highlighter.register(hljsLang, grammar.default);
       return hljsLang;
     } catch (err) {
       console.error(`"${lang}" is not a valid highlight.js/lowlight language.`);
@@ -41,11 +44,8 @@ export async function importLang(languageName: string | undefined) {
     }
   }
 }
-
-export const name = "hljs";
-
-export function tokenize(code: string, lang: string) {
-  const ast = lowlight.highlight(lang, code, { prefix: "" });
+export function tokenize(code: string, lang: HljsLanguage) {
+  const ast = highlighter.highlight(lang, code, { prefix: "" });
   return normalizeTokens(ast, mapHljsClass);
 }
 export function renderToken(token: HljsToken, key: number): React.ReactNode {
@@ -95,7 +95,7 @@ const nameMap = {
 
 type NameMap = typeof nameMap;
 
-export type HljsLanguage = Exclude<ShikiLanguage, keyof NameMap> | NameMap[keyof NameMap];
-
 // Ensure that Highlight.js language names map to existing Shiki language names
 type _Check<T extends ShikiLanguage = keyof NameMap> = T;
+
+export type HljsLanguage = Exclude<ShikiLanguage, keyof NameMap> | NameMap[keyof NameMap];

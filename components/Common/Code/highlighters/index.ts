@@ -1,32 +1,27 @@
-export type Loader<T> = { import: () => Promise<T>; current?: T };
+/* eslint-disable @typescript-eslint/method-signature-style */
+import lazy, { type Lazy } from "@lib/utils/lazy";
+import type { ShikiLanguage, ShikiToken } from "./shiki/core";
+import type { PrismLanguage, PrismToken } from "./prism/core";
+import type { HljsLanguage, HljsToken } from "./hljs/core";
 
-function createLoader<T>(factory: () => Promise<T>): Loader<T> {
-  let promise: Promise<T> | undefined;
-
-  const loader: Loader<T> = {
-    import: async () => (loader.current ??= await (promise ??= factory())),
-  };
-  return loader;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface Highlighter<Token = unknown, Lang = string> {
+export interface Highlighter<Lang extends string = string, Token = unknown> {
   name: string;
-  importLang: (lang: string | undefined) => Promise<Lang | undefined>;
-  tokenize: (code: string, lang: string) => Token[][];
-  renderToken: (token: Token, key: number) => React.ReactNode;
+  highlighter: unknown;
+  importLang(lang: string | undefined): Promise<Lang | undefined>;
+  tokenize(code: string, lang: Lang): Token[][];
+  renderToken(token: Token, key: number): React.ReactNode;
 }
+
+export type LazyHighlighter<Lang extends string = string, Token = unknown> = Lazy<Highlighter<Lang, Token>>;
+
+export type ShikiHighlighter = Highlighter<ShikiLanguage, ShikiToken>;
+export type PrismHighlighter = Highlighter<PrismLanguage, PrismToken>;
+export type HljsHighlighter = Highlighter<HljsLanguage, HljsToken>;
 
 // Define loaders for the available highlighters
+export const shiki: Lazy<ShikiHighlighter> = lazy(() => import("./shiki/core"));
+export const prism: Lazy<PrismHighlighter> = lazy(() => import("./prism/core"));
+export const hljs: Lazy<HljsHighlighter> = lazy(() => import("./hljs/core"));
 
-export type HighlighterName = "shiki" | "prism" | "hljs";
-
-export const shiki = createLoader(() => import("./shiki/core"));
-export const prism = createLoader(() => import("./prism/core"));
-export const hljs = createLoader(() => import("./hljs/core"));
-
-export const highlighters: Record<HighlighterName, Loader<Highlighter>> = {
-  shiki: shiki as never,
-  prism: prism as never,
-  hljs: hljs as never,
-};
+export const highlighters = { shiki, prism, hljs };
+export type HighlighterName = keyof typeof highlighters;

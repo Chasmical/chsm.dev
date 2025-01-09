@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import useLatest from "@lib/hooks/useLatest";
-import type { Highlighter, Loader } from "../highlighters";
+import type { LazyHighlighter } from "../highlighters";
 
 /**
  * Loads the specified language's highlight syntax, and returns its highlighter-compatible name when loaded.
  */
-export default function useHighlighterLang<Lang>(
-  highlighter: Loader<Highlighter<unknown, Lang>>,
+export default function useHighlighterLang<Lang extends string>(
+  loader: LazyHighlighter<Lang, unknown>,
   languageName: string | undefined,
 ) {
   const [loadedLang, setLoadedLang] = useState<Lang>();
@@ -15,8 +15,8 @@ export default function useHighlighterLang<Lang>(
 
   useEffect(() => {
     (async () => {
-      const instance = highlighter.current ?? (await highlighter.import());
-      const lang = await instance.importLang(languageName);
+      const highlighter = await loader.import();
+      const lang = await highlighter.importLang(languageName);
       if (languageName === latestName.current) setLoadedLang(lang);
     })();
   }, [languageName]);

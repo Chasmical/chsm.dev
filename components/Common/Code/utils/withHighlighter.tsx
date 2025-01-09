@@ -1,16 +1,19 @@
 import type { LanguageOrIconAlias } from "@lib/data/languageIconAliases";
-import { Highlighter, HighlighterName, highlighters, Loader } from "../highlighters";
+import { highlighters, type Highlighter, type HighlighterName, type LazyHighlighter } from "../highlighters";
 import useHighlighterLang from "./useHighlighterLang";
 import { rsc } from "rsc-env";
 
-export type WithHighlighter<T> = Omit<T, "highlighter"> & { highlighter: Loader<Highlighter> | HighlighterName };
+export type WithHighlighter<T> = Omit<T, "highlighter"> & { highlighter: LazyHighlighter | HighlighterName };
 
 /** Handles the loading of highlighter grammars, differently for server and client. */
 export default function withHighlighter(
-  hl: Loader<Highlighter> | HighlighterName | undefined,
+  hl: LazyHighlighter | HighlighterName | undefined,
   lang: LanguageOrIconAlias | (string & {}) | undefined,
-  Component: (highlighter: Highlighter, lang: string | undefined) => React.ReactNode,
+  Component: (highlighter?: Highlighter, lang?: string) => React.ReactNode,
 ) {
+  // No language - no highlighter
+  if (!lang) return Component();
+
   /*
    * Highlight grammar import is implemented differently for server and client:
    *
@@ -24,7 +27,7 @@ export default function withHighlighter(
    */
 
   // Use Shiki highlighting by default
-  const loader = (typeof hl === "string" ? highlighters[hl] : hl) ?? highlighters.shiki;
+  const loader: LazyHighlighter = (typeof hl === "string" ? highlighters[hl] : hl) ?? highlighters.shiki;
 
   if (rsc) {
     return loader
