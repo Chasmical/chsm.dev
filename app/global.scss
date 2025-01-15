@@ -18,12 +18,17 @@
 
   --navbar-height: 64px;
 
+  /* Prefer locally sourced font files over networked ones */
+  --common-font: "Inter", var(--hosted-inter-font, "_");
+  --mono-font: "JetBrains Mono NL", var(--hosted-jetbrains-mono-nl-font, "_");
+
   /* Easing function for quickly moving something from one place to another */
   --smooth-snap-movement: cubic-bezier(0.08, 0.52, 0.52, 1);
 
   color-scheme: dark;
   color: var(--color-text-primary);
   background: var(--color-background);
+  font-family: var(--common-font);
   font-size: 16px;
 }
 

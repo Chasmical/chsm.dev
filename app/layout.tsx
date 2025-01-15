@@ -13,10 +13,12 @@ export const viewport: Viewport = {
   themeColor: "#fbb946", // var(--color-accent)
 };
 
+const fontsClassName = clsx(inter.variable, JetBrains_Mono_NL.variable);
+
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
-    <html lang="en">
-      <body className={clsx(inter.className, JetBrains_Mono_NL.variable)}>{children}</body>
+    <html lang="en" className={fontsClassName}>
+      <body>{children}</body>
     </html>
   );
 }
