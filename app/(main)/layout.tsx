@@ -9,7 +9,7 @@ export default function MainLayout({ children }: React.PropsWithChildren) {
       <header className={styles.header}>
         <nav className={styles.navbar}>
           <div className={styles.navbarLinks}>
-            <h1>{"CHSM"}</h1>
+            <h2>{"chsm.dev"}</h2>
             <Link href="/">{"Main page"}</Link>
             {/* <Link href="/subtext">{"Subtext"}</Link> */}
             <Link href="/blog">{"Blog"}</Link>
@@ -34,7 +34,7 @@ export default function MainLayout({ children }: React.PropsWithChildren) {
             <Link href="/subtext/collections/1">{"Sub collections"}</Link> */}
           </div>
           <div>
-            <h4>{"Other platforms"}</h4>
+            <h4>{"My socials"}</h4>
             <Link href="https://discord.com/users/511178002277597185">{"Discord"}</Link>
             <Link href="https://github.com/Chasmical">{"GitHub"}</Link>
             <Link href="https://bsky.app/profile/chsm.dev">{"Bluesky"}</Link>
@@ -45,7 +45,7 @@ export default function MainLayout({ children }: React.PropsWithChildren) {
           </div>
         </div>
         <div className={styles.footerCopyright}>
-          {"Copyright © 2024 Chasmical"}
+          {`Copyright © ${new Date().getUTCFullYear()} Chasmical`}
           <div />
         </div>
       </footer>
