@@ -59,15 +59,24 @@ export default function VerticalTextCarousel({ options }: VerticalTextCarouselPr
     return () => clearTimeout(timeoutRef);
   }, []);
 
-  useEvent(containerRef.current, "wheel", ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-
+  const tryManualScroll = (down: boolean) => {
     const curTime = performance.now();
     if (curTime - lastScrollTime.current < 600) return;
     lastScrollTime.current = curTime;
+    smoothScrollListBy(down ? 1 : -1);
+  };
 
-    smoothScrollListBy(ev.deltaY > 0 ? 1 : -1);
+  useEvent(containerRef.current, "wheel", ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    tryManualScroll(ev.deltaY > 0);
+  });
+  useEvent(containerRef.current, "keydown", ev => {
+    if (ev.code === "ArrowUp" || ev.code === "ArrowDown") {
+      ev.preventDefault();
+      ev.stopPropagation();
+      tryManualScroll(ev.code === "ArrowDown");
+    }
   });
 
   const items = options.map((opt, i) => {
@@ -80,7 +89,7 @@ export default function VerticalTextCarousel({ options }: VerticalTextCarouselPr
 
   return (
     <div className={styles.wrapper}>
-      <div ref={containerRef} className={styles.container} style={{ "--scroll-offset": scrollPos }}>
+      <div ref={containerRef} tabIndex={0} className={styles.container} style={{ "--scroll-offset": scrollPos }}>
         <div ref={optionsBlockRef} className={styles.options}>
           {items.slice(items.length - optionViewOffset)}
           {items}

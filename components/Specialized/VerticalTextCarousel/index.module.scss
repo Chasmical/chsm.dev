@@ -17,8 +17,9 @@ $options-view-half: ($option-height + $option-gap) * $options-view-range;
   padding: 0 #{$options-side-padding};
   height: #{$options-view-height};
   transform: skewX(-10deg);
+  border-radius: 0.5rem;
 
-  &:hover .options {
+  &:is(:hover, :focus-within) .options {
     transition: transform 0.5s;
   }
 }
