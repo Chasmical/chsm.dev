@@ -8,10 +8,7 @@ const nextConfig: NextConfig = {
     },
     turbo: {
       rules: {
-        "*.mdx": {
-          loaders: ["raw-loader"],
-          as: "*.js",
-        },
+        "*.mdx": { loaders: ["raw-loader"], as: "*.js" },
       },
     },
   },
@@ -19,14 +16,11 @@ const nextConfig: NextConfig = {
     dirs: ["app", "components", "lib"],
   },
   webpack: config => {
-    config.module.rules.push({
-      test: /\.mdx$/,
-      use: "raw-loader",
-    });
+    config.module.rules.push({ test: /\.mdx$/, use: "raw-loader" });
     return config;
   },
 
-  rewrites: async () => [],
+  rewrites: async () => [{ source: "/", destination: "/about" }],
 };
 
 export default nextConfig;
