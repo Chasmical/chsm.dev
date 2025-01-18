@@ -45,7 +45,7 @@ $options-view-half: ($option-height + $option-gap) * $options-view-range;
   min-height: #{$option-height};
 
   transition: color 0.5s;
-  &.selected {
+  &[data-current] {
     color: var(--color-accent);
   }
 }

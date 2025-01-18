@@ -4,7 +4,6 @@ import useInterval from "@lib/hooks/useInterval";
 import useRefState from "@lib/hooks/useRefState";
 import useEventThroughRef from "@lib/hooks/useEventThroughRef";
 import styles from "./index.module.scss";
-import clsx from "clsx";
 
 const scrollViewOffset = 3;
 
@@ -87,8 +86,8 @@ export default function VerticalTextCarousel({ options }: VerticalTextCarouselPr
   };
 
   const optionElements = options.map((option, i) => (
-    <div key={i} className={clsx(styles.option, i === scrollPos.current && styles.selected)}>
-      {option}
+    <div key={i} className={styles.option} data-current={i === scrollPos.current ? true : undefined}>
+      {typeof option === "string" ? <span>{option}</span> : option}
     </div>
   ));
 
