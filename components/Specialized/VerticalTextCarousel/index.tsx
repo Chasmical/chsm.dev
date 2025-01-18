@@ -1,103 +1,113 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import useLatest from "@lib/hooks/useLatest";
-import useEvent from "@lib/hooks/useEvent";
+import { useRef } from "react";
+import useInterval from "@lib/hooks/useInterval";
+import useRefState from "@lib/hooks/useRefState";
+import useEventThroughRef from "@lib/hooks/useEventThroughRef";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-const optionViewOffset = 3;
+const scrollViewOffset = 3;
 
-interface VerticalTextCarouselProps {
+export interface VerticalTextCarouselProps {
   options: React.ReactNode[];
 }
+
 export default function VerticalTextCarousel({ options }: VerticalTextCarouselProps) {
-  const lastScrollTime = useRef(0);
-  const optionsLength = useLatest(options.length);
+  const scrollPos = useRefState(0);
+  const lastManualScrollTime = useRef(-1000);
 
-  const [scrollPos, setScrollPos] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const optionsBlockRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<HTMLDivElement>(null);
 
-  const smoothScrollListBy = (diff: number) => {
-    setScrollPos(oldPos => {
-      let next = oldPos + diff;
-      // If new position is within range, return it
-      if (next >= 0 && next < optionsLength.current) return next;
+  const smoothScrollView = (diff = 1) => {
+    let newPos = scrollPos.current + diff;
+
+    // If new position is outside the normalized view, handle the transition
+    if (newPos < 0 || newPos >= options.length) {
+      // Normalize the scroll position
+      newPos -= Math.floor(newPos / options.length) * options.length;
+
+      // Store the target position, and revert to previous position
+      const targetPos = newPos;
+      newPos -= diff;
 
       // Temporarily suppress the movement animation
-      const optionsBlock = optionsBlockRef.current!;
-      optionsBlock.style.transition = "none";
+      const viewStyle = viewRef.current!.style;
+      const origTransition = viewStyle.transition;
+      viewStyle.transition = "none";
 
-      // Normalize the scroll position
-      if (next < 0) next += optionsLength.current;
-      if (next >= optionsLength.current) next -= optionsLength.current;
-
+      // After one animation frame, set to the actual target position, for the proper animation
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          optionsBlock.style.removeProperty("transition");
-          setScrollPos(next);
+          requestAnimationFrame(() => {
+            viewStyle.transition = origTransition;
+            scrollPos.setValue(targetPos);
+          });
         });
       });
+    }
 
-      return next + (diff > 0 ? -1 : 1);
-    });
+    scrollPos.setValue(newPos);
   };
 
-  useEffect(() => {
-    let timeoutRef: NodeJS.Timeout | number = 0;
-
-    const idleScroll = () => {
-      if (performance.now() - lastScrollTime.current < 3000) {
-        timeoutRef = setTimeout(idleScroll, 100);
-      } else {
-        smoothScrollListBy(1);
-        timeoutRef = setTimeout(idleScroll, 2500);
-      }
-    };
-
-    timeoutRef = setTimeout(idleScroll, 2000);
-    return () => clearTimeout(timeoutRef);
-  }, []);
-
-  const tryManualScroll = (down: boolean) => {
-    const curTime = performance.now();
-    if (curTime - lastScrollTime.current < 600) return;
-    lastScrollTime.current = curTime;
-    smoothScrollListBy(down ? 1 : -1);
-  };
-
-  useEvent(containerRef.current, "wheel", ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    tryManualScroll(ev.deltaY > 0);
+  useInterval(() => {
+    // Wait for 3s after last manual scroll before auto-scrolling
+    // (for on page load, see lastManualScrollTime initial value)
+    if (performance.now() - lastManualScrollTime.current > 3000) {
+      // Scroll once every 2.5s
+      smoothScrollView();
+      return 2500;
+    }
+    // Wait until auto-scroll activates
+    return 100;
   });
-  useEvent(containerRef.current, "keydown", ev => {
+
+  const tryScrollManually = (down: boolean) => {
+    // Rate limit to one manual scroll per 0.4s
+    const curTime = performance.now();
+    if (curTime - lastManualScrollTime.current < 400) return;
+    lastManualScrollTime.current = curTime;
+
+    // Make the manual scrolls' animation more responsive
+    viewRef.current!.style.transition = "transform 0.35s ease-out";
+    setTimeout(() => viewRef.current!.style.removeProperty("transition"), 350);
+    smoothScrollView(down ? 1 : -1);
+  };
+
+  // "wheel" event is passive by default in React and cannot be prevented, so useEventThroughRef is needed
+  const setContainerRef = useEventThroughRef(containerRef, "wheel", ev => {
+    ev.preventDefault();
+    tryScrollManually(ev.deltaY > 0);
+  });
+  const onKeyDown = (ev: React.KeyboardEvent) => {
     if (ev.code === "ArrowUp" || ev.code === "ArrowDown") {
       ev.preventDefault();
-      ev.stopPropagation();
-      tryManualScroll(ev.code === "ArrowDown");
+      tryScrollManually(ev.code === "ArrowDown");
     }
-  });
+  };
 
-  const items = options.map((opt, i) => {
-    return (
-      <div className={clsx(styles.option, i === scrollPos && styles.selected)} key={i}>
-        {opt}
-      </div>
-    );
-  });
+  const optionElements = options.map((option, i) => (
+    <div key={i} className={clsx(styles.option, i === scrollPos.current && styles.selected)}>
+      {option}
+    </div>
+  ));
 
   return (
     <div className={styles.wrapper}>
-      <div ref={containerRef} tabIndex={0} className={styles.container} style={{ "--scroll-offset": scrollPos }}>
-        <div ref={optionsBlockRef} className={styles.options}>
-          {items.slice(items.length - optionViewOffset)}
-          {items}
-          {items.slice(0, optionViewOffset + optionViewOffset)}
+      <div
+        ref={setContainerRef}
+        tabIndex={0}
+        className={styles.container}
+        style={{ "--scroll-offset": scrollPos.current }}
+        onKeyDown={onKeyDown}
+      >
+        <div ref={viewRef} className={styles.options}>
+          {/* insert "fake" over-scroll elements on both sides */}
+          {optionElements.slice(optionElements.length - scrollViewOffset)}
+          {optionElements}
+          {optionElements.slice(0, scrollViewOffset)}
         </div>
-        <div className={styles.mask} />
-        <div className={styles.shadowTop} />
-        <div className={styles.shadowBottom} />
+        <div className={styles.outline} />
       </div>
     </div>
   );
