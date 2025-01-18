@@ -53,7 +53,7 @@ export default function VerticalTextCarousel({ options }: VerticalTextCarouselPr
   useInterval(() => {
     // Wait for 3s after last manual scroll before auto-scrolling
     // (for on page load, see lastManualScrollTime initial value)
-    if (performance.now() - lastManualScrollTime.current > 3000) {
+    if (performance.now() - lastManualScrollTime.current > 3000 && document.visibilityState !== "hidden") {
       // Scroll once every 2.5s
       smoothScrollView();
       return 2500;
