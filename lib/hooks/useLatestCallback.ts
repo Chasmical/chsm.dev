@@ -1,15 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
-import { useState } from "react";
+import { useRef } from "react";
 
-export default function useLatestCallback<T extends Function>(func: T): T {
-  const [latest] = useState(() => {
-    function result(this: unknown, ...args: unknown[]) {
-      result.current.apply(this, args);
-    }
-    result.current = func;
-    return result;
-  });
-
+export default function useLatestCallback<T extends (...args: never) => unknown>(func: T): T {
+  const ref = useRef<T & { current: T }>(undefined);
+  const latest = (ref.current ??= createRefCallback<T>());
   latest.current = func;
-  return latest as Function as T;
+  return latest as never;
+}
+
+function createRefCallback<T extends (...args: never) => unknown>(): T & { current: T } {
+  ref.current = undefined! as T;
+  return ref as never;
+
+  function ref(this: unknown, ...args: never) {
+    ref.current.apply(this, args);
+  }
 }
