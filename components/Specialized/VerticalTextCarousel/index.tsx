@@ -87,7 +87,7 @@ export default function VerticalTextCarousel({ options }: VerticalTextCarouselPr
 
   const optionElements = options.map((option, i) => (
     <div key={i} className={styles.option} data-current={i === scrollPos.current ? true : undefined}>
-      {typeof option === "string" ? <span>{option}</span> : option}
+      {option}
     </div>
   ));
 

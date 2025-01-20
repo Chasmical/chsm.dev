@@ -1,4 +1,4 @@
-$option-height: 60px;
+$option-height: 70px;
 $option-gap: 10px;
 $options-view-range: 3;
 
@@ -20,10 +20,12 @@ $options-view-half: ($option-height + $option-gap) * $options-view-range;
 
   mask-image: linear-gradient(
     to bottom,
-    transparent #{$option-height * 1.3},
-    white calc(50% - #{$option-height} / 2),
-    white calc(50% + #{$option-height} / 2),
-    transparent calc(100% - #{$option-height * 1.3}),
+    transparent #{$option-height * 1},
+    #8884 #{$option-height * 2.5},
+    white calc(50% - #{$option-height} / 4),
+    white calc(50% + #{$option-height} / 4),
+    #8884 calc(100% - #{$option-height * 2.5}),
+    transparent calc(100% - #{$option-height * 1}),
   );
 }
 .options {
@@ -38,12 +40,13 @@ $options-view-half: ($option-height + $option-gap) * $options-view-range;
   display: flex;
   align-items: center;
   padding: 0.25rem 1.5rem 0.25rem 0.5rem;
-  font-size: 2rem;
+  font-size: 2.5rem;
   border: 2px solid var(--color-border);
   border-radius: 0.5rem;
   height: #{$option-height};
   min-height: #{$option-height};
 
+  white-space: pre-wrap;
   transition: color 0.5s;
   &[data-current] {
     color: var(--color-accent);
