@@ -3,3 +3,70 @@
   margin: 2rem auto 4rem;
 }
 
+.carouselContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: skewX(-10deg);
+  margin: 220px 0;
+}
+.carouselPrefix {
+  font-size: 3rem;
+  margin-right: 0.5rem;
+}
+.name {
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+.brokenText {
+  display: flex;
+  letter-spacing: 2px;
+
+  > span {
+    display: block;
+    white-space: pre;
+    animation: broken-text 1s linear infinite;
+    animation-delay: calc(mod((var(--i) * 81), 11) * 0.2s);
+    animation-duration: calc(mod((var(--i) * 1337), 12.59) * 1s + 20s);
+    animation-timing-function: steps(calc(mod(var(--i), 5)));
+  }
+}
+
+@keyframes broken-text {
+  0% {
+    transform: skewX(calc((11 - 3 * sin(4 * var(--i))) * 1.2deg)) translateY(calc(sin(4 * var(--i)) * 2px));
+    opacity: calc(0.7 + mod(cos(var(--i) + 2.1), 0.6));
+  }
+  50% {
+    transform: skewX(calc((11 - 3 * sin(4 * var(--i))) * 0.8deg)) translateY(calc(sin(4.5 * var(--i)) * 2px));
+  }
+  70% {
+    opacity: calc(0.7 + mod(cos(var(--i) + 2.4), 0.3));
+  }
+  100% {
+    transform: skewX(calc((11 - 3 * sin(4 * var(--i))) * 1.2deg)) translateY(calc(sin(4 * var(--i)) * 2px));
+    opacity: calc(0.2 + mod(cos(var(--i) + 2.9), 0.4));
+  }
+}
+
+.wikiText {
+  color: var(--color-text-primary);
+}
+.wikiText a {
+  transition: filter 0.5s;
+  filter: grayscale(0.7);
+
+  color: #5c98d6;
+  &:visited {
+    color: #776eb7;
+  }
+  &:hover {
+    color: #7b92bf;
+    text-decoration: underline 3px;
+    text-underline-offset: 3px;
+  }
+}
+[data-current] .wikiText a {
+  filter: none;
+}
