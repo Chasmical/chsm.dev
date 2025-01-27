@@ -42,6 +42,7 @@ export default function MainLayout({ children }: React.PropsWithChildren) {
           <div>
             <h4>{"Tools and utilities"}</h4>
             <Link href="/markdown">{"Markdown demo"}</Link>
+            <Link href="/tools">{"Various tools"}</Link>
           </div>
         </div>
         <div className={styles.footerCopyright}>
