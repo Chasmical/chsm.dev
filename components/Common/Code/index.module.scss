@@ -15,7 +15,7 @@
   font-size: 13px;
   line-height: 18px;
   border: none;
-  padding: 14px 0;
+  padding: 13px 0;
   white-space: pre;
 
   cursor: text;
@@ -24,6 +24,9 @@
 
   ::selection {
     background-color: #007acc99;
+  }
+  &:empty {
+    padding: 6.5px 0;
   }
 }
 
