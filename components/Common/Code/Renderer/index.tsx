@@ -17,6 +17,7 @@ const CodeRenderer = memo(function CodeRenderer(props: CodeRendererProps) {
 
   // Tokenize the code
   const tokens = useMemo(() => {
+    if (!code) return [];
     return lang ? highlighter!.tokenize(code, lang) : code;
   }, [lang, code]);
 
