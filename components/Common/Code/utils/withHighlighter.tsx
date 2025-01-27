@@ -38,5 +38,6 @@ export default function withHighlighter(
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadedLang = useHighlighterLang(loader, lang);
-  return Component(loader.current!, loadedLang);
+
+  return loadedLang && loader.current ? Component(loader.current, loadedLang) : Component();
 }
