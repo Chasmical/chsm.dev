@@ -21,7 +21,7 @@ const classShorthands = {
   variable: "i",
   interpolation: "i",
   constant: "D",
-  property: "_",
+  property: "i",
   punctuation: "p",
   important: "_",
   comment: "q",
@@ -66,7 +66,7 @@ const classShorthands = {
 
 export function mapPrismClass(prismClass: string[]) {
   // Map Prism's default class names to short ones
-  const className = prismClass[1];
+  const className = prismClass.find(c => c in classShorthands);
   const short = classShorthands[className as keyof typeof classShorthands];
   return "sh-" + (short ?? "_ " + prismClass.join(" "));
 }

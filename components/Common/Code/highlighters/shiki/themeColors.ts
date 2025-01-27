@@ -189,10 +189,11 @@ export const shikiTokenColors: ShikiTokenColor[] = [
       "support.variable",
       "entity.name.variable",
       "entity.name.label",
+      "meta.object-literal.key",
+      "support.type.property-name",
     ],
     settings: { foreground: "identifier" },
   },
-  { scope: "meta.object-literal.key", settings: { foreground: "identifier" } },
   {
     scope: [
       "support.constant.property-value",
