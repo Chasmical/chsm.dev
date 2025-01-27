@@ -3,6 +3,8 @@
   border: 2px solid var(--color-border);
   border-radius: 8px;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 .pre {
   overflow-x: auto;

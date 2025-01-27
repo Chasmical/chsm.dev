@@ -34,7 +34,7 @@ export function CodeBlock(allProps: CodeBlockProps) {
 
   return withHighlighter(highlighter, props.lang, (highlighter, lang) => (
     <CodeBlockContainer {...props}>
-      <code className={clsx(styles.block, lang && [highlighter!.name, "language-" + lang])}>
+      <code className={clsx(styles.block, lang && [highlighter?.name, "language-" + lang])}>
         <CodeRenderer code={code} lang={lang} highlighter={highlighter} directives={directives} />
       </code>
     </CodeBlockContainer>
@@ -57,7 +57,7 @@ export function InlineCode(allProps: InlineCodeProps) {
   const code = useMemo(() => stringifyChildren(children).join("\n"), [children]);
 
   return withHighlighter(highlighter, lang, (highlighter, lang) => (
-    <code className={clsx(styles.inline, lang && [highlighter!.name, "language-" + lang], className)} {...props}>
+    <code className={clsx(styles.inline, lang && [highlighter?.name, "language-" + lang], className)} {...props}>
       <CodeRenderer code={code} lang={lang} highlighter={highlighter} inline />
     </code>
   ));
