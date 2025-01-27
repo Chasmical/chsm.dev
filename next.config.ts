@@ -20,7 +20,10 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  rewrites: async () => [{ source: "/", destination: "/about" }],
+  rewrites: async () => [
+    { source: "/", destination: "/about" },
+    { source: "/user/Chasmical", destination: "/about" },
+  ],
 };
 
 export default nextConfig;
