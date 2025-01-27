@@ -59,7 +59,8 @@ const classShorthands = {
 
 export function mapHljsClass(hljsClass: string[]) {
   // Map highlight.js's default class names to short ones
-  const className = hljsClass.at(-1)!.replace(/_+$/, "");
+  const normalized = hljsClass.map(s => s.replace(/_+$/, ""));
+  const className = normalized.findLast(c => c in classShorthands);
   const short = classShorthands[className as keyof typeof classShorthands];
   return "sh-" + (short ?? "_ " + hljsClass.join(" "));
 }
