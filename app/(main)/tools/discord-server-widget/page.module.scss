@@ -1,0 +1,64 @@
+.panel {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-start;
+  gap: 1rem;
+
+  background: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+.firstCol {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-shrink: 0;
+  overflow: auto;
+}
+.secondCol {
+  flex-grow: 1;
+  padding-right: 0.5rem;
+  overflow-y: scroll;
+  height: 760px;
+
+  > div[role=panel] { margin-bottom: 1rem; }
+}
+
+@media (min-height: 800px) {
+  .firstCol {
+    position: sticky;
+    top: calc(var(--navbar-height) + 2.5rem);
+  }
+}
+
+.inputs {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-left: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+  input {
+    background: var(--color-background-lighter);
+    border: 1px solid var(--color-border-lightest);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+    width: 100%;
+    font-size: 1.8rem;
+
+    &:focus {
+      border-color: var(--color-accent);
+    }
+  }
+}
+
+.widget {
+  border: 1px solid var(--color-border-lighter);
+  border-radius: 0.5rem;
+}
