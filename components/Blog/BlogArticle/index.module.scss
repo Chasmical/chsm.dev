@@ -13,7 +13,7 @@
     background: linear-gradient(var(--color-background-light) 0px, var(--color-background) 1200px);
   }
   &:not(.truncated) {
-    padding-bottom: #{64px + $pad};
+    padding-bottom: #{32px + $pad};
   }
 }
 
@@ -45,6 +45,7 @@
   border-radius: 0.5rem;
   transition: border-color 0.2s;
 
+  text-wrap: nowrap;
   letter-spacing: 1px;
 
   &:hover {

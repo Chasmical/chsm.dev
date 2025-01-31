@@ -13,7 +13,7 @@
   padding-left: 1rem;
 }
 .colContent {
-  flex: 1 1 0;
+  flex: 999999 1 0;
   padding: 2rem 2rem 0;
   max-width: 792px;
   overflow: auto;
@@ -25,31 +25,27 @@
   padding-right: 1rem;
   order: 3;
 }
+.hideTocFirst .colToc {
+  flex: 1 0 0;
+  min-width: 0;
+}
 
 @media (max-width: 1152px) {
   .container {
-    justify-content: flex-end;
-  }
-  .container.hideTocFirst {
-    .colToc {
-      display: none;
+    justify-content: center;
+
+    &.hideTocFirst {
+      .colToc { display: none; }
     }
-    .colSidebar {
-      order: 3;
+    &:not(.hideTocFirst) {
+      .colSidebar { display: none; }
     }
-  }
-  .container:not(.hideTocFirst) .colSidebar {
-    display: none;
   }
   .colContent {
     padding: 2rem 1.5rem 0;
   }
 }
 @media (max-width: 768px) {
-  .colSidebar {
-    display: none;
-  }
-  .colToc {
-    display: none;
-  }
+  .colSidebar { display: none; }
+  .colToc { display: none; }
 }
