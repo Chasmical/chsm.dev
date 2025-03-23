@@ -1,5 +1,5 @@
 import { findShikiLanguage, type ShikiLanguage } from "@lib/data/languageIconAliases";
-import { refractor, type Syntax as RefractorSyntax } from "refractor/lib/core";
+import { refractor, type Syntax as RefractorSyntax } from "refractor/core";
 import normalizeTokens, { type PrismToken } from "./normalizeTokens";
 import { mapPrismClass } from "./theme";
 
@@ -49,24 +49,24 @@ export function renderToken(token: PrismToken, key: number): React.ReactNode {
 
 // An import map of some selected grammars, used on the website
 const importMap: Record<PrismLanguage, () => Promise<{ default: RefractorSyntax }>> = {
-  tsx: () => import("refractor/lang/tsx"),
-  markup: () => import("refractor/lang/markup"),
-  scss: () => import("refractor/lang/scss"),
-  csharp: () => import("refractor/lang/csharp"),
-  fsharp: () => import("refractor/lang/fsharp"),
-  cpp: () => import("refractor/lang/cpp"),
-  rust: () => import("refractor/lang/rust"),
-  python: () => import("refractor/lang/python"),
-  ini: () => import("refractor/lang/ini"),
-  json: () => import("refractor/lang/json"),
-  yaml: () => import("refractor/lang/yaml"),
-  csv: () => import("refractor/lang/csv"),
-  markdown: () => import("refractor/lang/markdown"),
-  latex: () => import("refractor/lang/latex"),
-  bash: () => import("refractor/lang/bash"),
-  powershell: () => import("refractor/lang/powershell"),
-  docker: () => import("refractor/lang/docker"),
-  makefile: () => import("refractor/lang/makefile"),
+  tsx: () => import("refractor/tsx"),
+  markup: () => import("refractor/markup"),
+  scss: () => import("refractor/scss"),
+  csharp: () => import("refractor/csharp"),
+  fsharp: () => import("refractor/fsharp"),
+  cpp: () => import("refractor/cpp"),
+  rust: () => import("refractor/rust"),
+  python: () => import("refractor/python"),
+  ini: () => import("refractor/ini"),
+  json: () => import("refractor/json"),
+  yaml: () => import("refractor/yaml"),
+  csv: () => import("refractor/csv"),
+  markdown: () => import("refractor/markdown"),
+  latex: () => import("refractor/latex"),
+  bash: () => import("refractor/bash"),
+  powershell: () => import("refractor/powershell"),
+  docker: () => import("refractor/docker"),
+  makefile: () => import("refractor/makefile"),
 };
 const nameMap = {
   html: "markup",

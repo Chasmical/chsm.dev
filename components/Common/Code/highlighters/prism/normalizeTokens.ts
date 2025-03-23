@@ -1,7 +1,6 @@
-import type { RefractorRoot, RefractorElement as RfElem, Text } from "refractor";
-import type { Root } from "hast";
+import type { Root, Element, Text } from "hast";
 
-type RefractorElement = Omit<RfElem, "children"> & {
+type RefractorElement = Omit<Element, "children"> & {
   properties: { className: string[] };
   children: (RefractorElement | Text)[];
 };
@@ -14,7 +13,7 @@ const newLineRegex = /\r?\n|\r/g;
  * Transforms the Refractor's AST into a 2D array of tokens, grouped by line.
  */
 export default function normalizeTokens(
-  ast: RefractorRoot | Root,
+  ast: Root,
   mapClassName: (className: string[]) => string | undefined,
 ): PrismToken[][] {
   let traversingLine: PrismToken[] = [];
