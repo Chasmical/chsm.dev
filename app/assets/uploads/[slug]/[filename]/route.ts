@@ -21,13 +21,33 @@ export async function GET(_request: NextRequest, { params: paramsPromise }: Rout
 
   const res = await fetch(publicUrl, { next: { revalidate: 3600 } });
 
-  console.log(Object.fromEntries([...res.headers.entries()]));
-
   const blob = await res.blob();
+
+  // Since files are stored in the bucket without extensions, try to infer the type from the filename
+  let contentType = res.headers.get("Content-Type")!;
+  if (contentType === "binary/octet-stream") {
+    const extension = params.filename.slice(params.filename.lastIndexOf(".")).toLowerCase();
+
+    const inferredType = {
+      ".png": "image/png",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".mp3": "audio/mp3",
+      ".mp4": "video/mp4",
+    }[extension];
+
+    if (inferredType) contentType = inferredType;
+  }
+
+  // Copy some headers from the original response
+  const copyHeaders = ["Content-Length", "Date", "Etag", "Last-Modified"];
+  const origHeaders = Object.fromEntries(copyHeaders.map(h => [h, res.headers.get(h)]));
 
   return new NextResponse(blob, {
     headers: {
-      "Content-Type": res.headers.get("Content-Type")!,
+      "Content-Type": contentType,
+      "Cache-Control": "public, max-age=3600",
+      ...origHeaders,
     },
   });
 }
