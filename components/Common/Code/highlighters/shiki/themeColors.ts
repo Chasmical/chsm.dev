@@ -84,6 +84,8 @@ export const shikiTokenColors: ShikiTokenColor[] = [
       "punctuation.separator",
       "punctuation.accessor",
       "punctuation.curlybrace",
+      "punctuation.parenthesis",
+      "punctuation.squarebracket",
       "meta.brace.round",
       "meta.brace.square",
     ],
