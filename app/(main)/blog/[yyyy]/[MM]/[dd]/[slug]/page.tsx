@@ -104,5 +104,12 @@ export async function generateMetadata({ params: paramsPromise }: PageProps): Pr
       title,
       description,
     },
+    alternates: {
+      types: {
+        "application/rss+xml": "/blog/rss.xml",
+        "application/atom+xml": "/blog/atom.xml",
+        "application/json": "/blog/feed.json",
+      },
+    },
   };
 }

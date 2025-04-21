@@ -92,6 +92,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
     },
+    alternates: {
+      types: {
+        "application/rss+xml": "/blog/rss.xml",
+        "application/atom+xml": "/blog/atom.xml",
+        "application/json": "/blog/feed.json",
+      },
+    },
     robots: {
       index: false,
     },

@@ -110,6 +110,13 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       description,
       images: [],
     },
+    alternates: {
+      types: {
+        "application/rss+xml": "/blog/rss.xml",
+        "application/atom+xml": "/blog/atom.xml",
+        "application/json": "/blog/feed.json",
+      },
+    },
 
     robots: {
       index: tags.length === 1,

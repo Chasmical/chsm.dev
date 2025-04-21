@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createServerSupabase } from "@lib/database/server";
-import { getAllBlogPosts } from "@api/blog";
+import { getAllBlogPosts, getAllBlogPostsShallow } from "@api/blog";
 import { getBlogPostSlug, truncateBlogPostContent } from "@api/blog/helper";
 import { configureMdx } from "@lib/mdx";
 import configurePlugins, { MdxPluginConfigs } from "@lib/mdx/configure-plugins";
@@ -46,13 +46,13 @@ export default async function BlogLandingPage() {
 export async function generateMetadata(): Promise<Metadata> {
   // Select all blog posts (throw notFound on error)
   const supabase = createServerSupabase("anonymous", { revalidate: 300 });
-  const recentPosts = (await getAllBlogPosts(supabase)) || notFound();
+  const recentPosts = (await getAllBlogPostsShallow(supabase)) || notFound();
+  const latest = recentPosts[0];
 
-  const title = `Recent blog posts`;
-  // TODO: Add a nice description for the blog
+  const title = `Blog posts`;
   const description = [
-    `A total of ${recentPosts.length} blog posts:`,
-    ...recentPosts.map(p => `${getBlogPostSlug(p).split("/").slice(0, 3).join("-")}: ${p.title}`),
+    "A blog about whatever I'm doing. It's mostly about programming, microoptimization, and overcomplicated bizarre projects.",
+    `A total of ${recentPosts.length} posts. Most recent: [${getBlogPostSlug(latest).split("/").slice(0, 3).join("-")}] "${latest.title}".`,
   ].join("\n");
 
   return {
@@ -71,6 +71,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       images: [],
+    },
+    alternates: {
+      types: {
+        "application/rss+xml": "/blog/rss.xml",
+        "application/atom+xml": "/blog/atom.xml",
+        "application/json": "/blog/feed.json",
+      },
     },
   };
 }
