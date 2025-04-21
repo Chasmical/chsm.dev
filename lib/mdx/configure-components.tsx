@@ -30,11 +30,17 @@ function InlineCodeWrapper({ children, ...props }: InlineCodeProps) {
   return <InlineCode {...props}>{children}</InlineCode>;
 }
 
+function Image({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+  if (src?.slice(0, src.lastIndexOf(".")).endsWith("_2x")) (props.style ??= {}).zoom = 0.5;
+  return <img src={src} alt={alt} {...props} />;
+}
+
 export default function configureComponents(_config?: unknown): MdxComponents {
   return {
     em: "i",
     strong: "b",
     a: Link,
+    img: Image,
     code: InlineCodeWrapper,
     pre: CodeBlock,
     h1: makeHeading(1),
