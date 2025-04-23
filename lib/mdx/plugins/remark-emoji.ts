@@ -12,13 +12,14 @@ import "./remark-emoji.scss";
 // - https://github.com/jdecked/twemoji-parser
 // - https://github.com/florianeckerstorfer/remark-a11y-emoji
 
-const EmojiNameRegex = /:\+1:|:-1:|:[\w-]+:/g;
+const EmojiNameRegex = /:(\+1|-1|[\w-]+):/g;
 const EmojiRegex = new RegExp(`(\\\\*)(${twemojiRegex.source})`, "g");
 
 export interface RemarkEmojiOptions {
   className?: string;
   buildUrl?: (codepoints: string, type: "png" | "svg") => string;
   type?: "png" | "svg";
+  extraEmojis?: (emojiName: string) => { url: string; description: string } | undefined;
 }
 
 export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer<Nodes> {
@@ -34,7 +35,25 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer<N
 
   return tree => {
     // Replace emoji names with emojis
-    findAndReplace(tree, [EmojiNameRegex, emojiName => getEmoji(emojiName) ?? false]);
+    findAndReplace(tree, [
+      EmojiNameRegex,
+      (_, emojiName) => {
+        const twemoji = getEmoji(emojiName);
+        if (twemoji) return twemoji;
+
+        // Replace extra emojis with images
+        const extra = options.extraEmojis?.(emojiName);
+        if (extra) {
+          const { url, ...extraProps } = extra;
+          return {
+            type: "image",
+            url,
+            data: { hProperties: { draggable: "false", alt: "", className, ...extraProps } },
+          };
+        }
+        return false;
+      },
+    ]);
 
     // Replace emojis with twemojis
     findAndReplace(tree, [

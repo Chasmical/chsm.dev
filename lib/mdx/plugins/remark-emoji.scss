@@ -1,6 +1,12 @@
 img.emoji {
-  height: 1em;
-  width: 1em;
+  height: 1.5em;
+  width: 1.5em;
+  vertical-align: -0.35em;
   margin: 0 .05em 0 .1em !important;
-  vertical-align: -0.1em;
+}
+img.extraEmoji {
+  height: 2em;
+  width: 2em;
+  vertical-align: -0.6em;
+  margin: 0 .05em 0 .1em !important;
 }

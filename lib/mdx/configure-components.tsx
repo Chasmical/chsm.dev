@@ -30,7 +30,7 @@ function InlineCodeWrapper({ children, ...props }: InlineCodeProps) {
   return <InlineCode {...props}>{children}</InlineCode>;
 }
 
-function Image({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+function Image({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { src: string }) {
   if (src?.slice(0, src.lastIndexOf(".")).endsWith("_2x")) (props.style ??= {}).zoom = 0.5;
   return <img src={src} alt={alt} {...props} />;
 }

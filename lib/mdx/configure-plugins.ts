@@ -39,7 +39,7 @@ export default function configurePlugins(config: MdxPluginConfigs = {}) {
       remarkCustomHeadingId,
       [remarkTocHeadings, tocOptions],
       [remarkInlineCssColor, {}],
-      [remarkEmoji, {}],
+      [remarkEmoji, { extraEmojis }],
       [remarkEmbed, embedOptions],
       [remarkAnalyze, analysisOptions],
     ],
@@ -55,4 +55,10 @@ export default function configurePlugins(config: MdxPluginConfigs = {}) {
   config.analysis = analysisOptions.data;
 
   return options;
+}
+
+function extraEmojis(emojiName: string): { url: string; className?: string; ariaLabel?: string } | undefined {
+  if (emojiName.startsWith("blob")) {
+    return { url: "/assets/emojis/" + emojiName + ".png", className: "extraEmoji" };
+  }
 }
