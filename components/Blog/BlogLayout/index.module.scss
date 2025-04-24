@@ -14,7 +14,7 @@
 }
 .colContent {
   flex: 999999 1 0;
-  padding: 2rem 2rem 0;
+  padding: 1rem 2rem 0;
   max-width: 792px;
   overflow: auto;
 }
@@ -28,6 +28,18 @@
 .hideTocFirst .colToc {
   flex: 1 0 0;
   min-width: 0;
+}
+
+.stickyColumn {
+  position: sticky;
+  top: calc(var(--navbar-height) + 1rem);
+  height: calc(100vh - var(--navbar-height) - 2rem);
+  margin-top: 4rem;
+  display: flex;
+  flex-flow: column;
+}
+.colSidebar .stickyColumn {
+  margin-top: 3rem;
 }
 
 @media (max-width: 1152px) {

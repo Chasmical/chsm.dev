@@ -13,7 +13,7 @@
     background: linear-gradient(var(--color-background-light) 0px, var(--color-background) 1200px);
   }
   &:not(.truncated) {
-    padding-bottom: #{32px + $pad};
+    padding-bottom: #{48px + $pad};
   }
 }
 

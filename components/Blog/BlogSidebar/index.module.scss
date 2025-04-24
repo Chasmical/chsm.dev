@@ -1,12 +1,10 @@
 .container {
-  display: block;
-  position: sticky;
-  top: calc(var(--navbar-height) + 3rem);
+  padding-top: 2rem;
 }
 .title {
   font-size: 1.2rem;
   font-weight: bold;
-  margin: 2rem 0 1rem;
+  margin: 0 0 1rem;
 }
 
 .items {

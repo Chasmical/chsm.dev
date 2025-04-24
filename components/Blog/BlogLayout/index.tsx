@@ -10,8 +10,14 @@ export interface BlogLayoutProps {
 export default function BlogLayout({ sidebar, article, toc }: BlogLayoutProps) {
   return (
     <div className={clsx(styles.container, !toc && styles.hideTocFirst)}>
-      <aside className={styles.colSidebar}>{sidebar}</aside>
-      <div className={styles.colToc}>{toc}</div>
+      <aside className={styles.colSidebar}>
+        <div className={styles.stickyColumn}>{sidebar}</div>
+      </aside>
+      <div className={styles.colToc}>
+        <div className={styles.stickyColumn}>
+          {toc}
+        </div>
+      </div>
       <main className={styles.colContent} itemScope itemType="https://schema.org/Blog">
         {article}
       </main>
