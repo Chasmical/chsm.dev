@@ -37,6 +37,7 @@
   margin-top: 4rem;
   display: flex;
   flex-flow: column;
+  justify-content: space-between;
 }
 .colSidebar .stickyColumn {
   margin-top: 3rem;
@@ -55,6 +56,10 @@
   }
   .colContent {
     padding: 2rem 1.5rem 0;
+  }
+  .stickyColumn {
+    top: calc(var(--navbar-height) + 0.5rem);
+    height: calc(100vh - var(--navbar-height) - 1rem);
   }
 }
 @media (max-width: 768px) {
