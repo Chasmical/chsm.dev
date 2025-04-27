@@ -40,6 +40,7 @@ export default function configureComponents(_config?: unknown): MdxComponents {
     em: "i",
     strong: "b",
     a: Link,
+    Link,
     img: Image,
     code: InlineCodeWrapper,
     pre: CodeBlock,

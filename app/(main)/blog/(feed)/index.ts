@@ -24,7 +24,7 @@ export async function generateFeed() {
     id: baseUrl + "/blog",
     link: baseUrl + "/blog",
     language: "en",
-    title: "chsm.dev | blog posts",
+    title: "chsm.dev blog",
     description:
       "A blog about whatever I'm doing. It's mostly about programming, microoptimization, and overcomplicated bizarre projects.",
     // image: "",
