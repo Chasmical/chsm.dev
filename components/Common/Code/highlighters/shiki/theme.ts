@@ -6,6 +6,7 @@ const classShorthands = {
   DEBUG: "_",
 
   identifier: "i",
+  constant: "D",
   comment: "q",
   keyword: "k",
   keywordControl: "K",
