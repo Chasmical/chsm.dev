@@ -50,3 +50,18 @@
   width: 68px; height: 48px;
   margin-left: -34px; margin-top: -24px;
 }
+.optionsButton {
+  position: absolute;
+  pointer-events: none;
+  width: 36px;
+  height: 36px;
+  top: 16px; right: 12px;
+}
+.channelLogo {
+  position: absolute;
+  pointer-events: none;
+  top: 12px; left: 12px;
+  width: 40px; height: 40px;
+  border-radius: 9999px;
+  backdrop-filter: brightness(0.2) contrast(0.8);
+}

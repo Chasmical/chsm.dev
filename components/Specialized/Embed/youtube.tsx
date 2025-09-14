@@ -48,14 +48,15 @@ export default function YouTubeEmbed({ url: _url, data, className, ...props }: Y
   // Return a placeholder thumbnail, to prevent tracking
   return (
     <div role="panel" className={clsx(styles.embed, className)} {...props}>
-      <img
-        className={styles.thumbnail}
-        src={embed.thumbnail_url}
-        width={width}
-        height={height}
-        alt={embed.title}
-        onClick={() => setActive(true)}
-      />
+      {embed.thumbnail_url && (
+        <AdaptiveThumbnail
+          url={embed.thumbnail_url}
+          width={width}
+          height={height}
+          alt={embed.title}
+          onClick={() => setActive(true)}
+        />
+      )}
       <div className={styles.gradient} />
       <div className={styles.title}>{embed.title}</div>
       <div className={styles.playButton}>
@@ -67,6 +68,63 @@ export default function YouTubeEmbed({ url: _url, data, className, ...props }: Y
           <path d="M 45,24 27,14 27,34" fill="#fff" />
         </svg>
       </div>
+      <div className={styles.optionsButton}>
+        <svg height="100%" viewBox="-5 -5 36 36" width="100%">
+          <path
+            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+            fill="#fff"
+          ></path>
+        </svg>
+      </div>
+      <div className={styles.channelLogo}></div>
     </div>
+  );
+}
+
+interface AdaptiveThumbnailProps {
+  url: string;
+  width: number;
+  height: number;
+  alt?: string;
+  onClick?: () => void;
+}
+
+function AdaptiveThumbnail({ url, ...props }: AdaptiveThumbnailProps) {
+  const [thumbnails, setThumbnails] = useState(() => ({
+    hq: url, // default, 480x360
+    sd: url?.replace("hqdefault", "sddefault"), // 640x480
+    max: url?.replace("hqdefault", "maxresdefault"), // 1280x720
+  }));
+
+  const fallbackThumbnail = (img: HTMLImageElement) => {
+    const ratio = window.devicePixelRatio;
+    const [width, height] = [img.naturalWidth, img.naturalHeight];
+
+    // Check for the 404 fallback 120x90 image that YouTube serves
+    if (Math.abs(width * ratio - 120) < 1 && Math.abs(height * ratio - 90) < 1) {
+      console.warn("YouTube thumbnail not found: " + img.src);
+
+      setThumbnails(prev => {
+        if (prev.max != prev.sd) {
+          return { ...prev, max: prev.sd };
+        }
+        if (prev.sd != prev.hq) {
+          return { ...prev, max: prev.hq, sd: prev.hq };
+        }
+        return prev;
+      });
+    }
+  };
+
+  return (
+    // eslint-disable-next-line jsx-a11y/alt-text
+    <img
+      ref={img => void (img?.complete && fallbackThumbnail(img))}
+      className={styles.thumbnail}
+      srcSet={`${thumbnails.hq}, ${thumbnails.sd} 1.3x, ${thumbnails.max} 2x`}
+      src={thumbnails.max}
+      onLoad={ev => fallbackThumbnail(ev.currentTarget)}
+      {...props}
+    />
   );
 }
