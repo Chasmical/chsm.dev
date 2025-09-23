@@ -20,7 +20,7 @@ export const shikiTokenColors: ShikiTokenColor[] = [
   { scope: "constant.numeric", settings: { foreground: "number" } },
   { scope: "constant.regexp", settings: { foreground: "#646695" } },
   { scope: "constant.other.caps.rust", settings: { foreground: "identifier" } },
-  { scope: "entity.name.tag", settings: { foreground: "entityTag" } },
+  { scope: ["entity.name.tag", "source.shell constant.other.option"], settings: { foreground: "entityTag" } },
   { scope: "entity.name.tag.css", settings: { foreground: "#d7ba7d" } },
   { scope: "entity.other.attribute-name", settings: { foreground: "identifier" } },
   {
