@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
       static: 300,
     },
   },
-  eslint: {
-    dirs: ["app", "components", "lib"],
-  },
   turbopack: {
     rules: {
       "*.mdx": { loaders: ["raw-loader"], as: "*.js" },
