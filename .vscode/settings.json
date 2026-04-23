@@ -1,0 +1,11 @@
+{
+  "search.exclude": {
+    ".astro/**": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    ".astro/**": true
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
+}
