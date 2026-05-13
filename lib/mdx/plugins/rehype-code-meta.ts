@@ -40,7 +40,7 @@ const MetaAttributeRegex = /([^\s=]+)(?:="([^"]+)"|=([^\s]+))?/g;
 function parseAttributes(meta: string): Record<string, unknown> | undefined {
   if (meta.trim()) {
     const matches = [...meta.matchAll(MetaAttributeRegex)];
-    const entries = matches.map(([, key, quoted, unquoted]) => [key, quoted ?? unquoted ?? true]);
+    const entries = matches.map(([, key, quoted, unquoted]) => [key, quoted ?? unquoted ?? true] as const);
     return Object.fromEntries(entries);
   }
 }

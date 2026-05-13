@@ -23,7 +23,7 @@ function normalizeProviders(data: oEmbedProvider[]) {
   // Ensure `endpoints` and `schemes` aren't undefined
   for (const provider of data) {
     provider.endpoints ??= [];
-    for (const endpoint of provider.endpoints!) {
+    for (const endpoint of provider.endpoints) {
       endpoint.schemes ??= [];
       for (let i = 0, length = endpoint.schemes.length; i < length; i++) {
         // Replace "simple patterns" with regex patterns
@@ -32,5 +32,5 @@ function normalizeProviders(data: oEmbedProvider[]) {
       }
     }
   }
-  return data as unknown as oEmbedProvider[];
+  return data;
 }

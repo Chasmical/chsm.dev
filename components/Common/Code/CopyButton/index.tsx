@@ -14,7 +14,7 @@ export default function CodeCopyButton({ float, icon }: CodeCopyButtonProps) {
   const copyContents = () => {
     const pre = buttonRef.current!.closest("[role=panel]")!.querySelector("pre")!;
     const content = pre.textContent;
-    if (content) navigator.clipboard.writeText(content);
+    if (content) void navigator.clipboard.writeText(content);
   };
 
   return (

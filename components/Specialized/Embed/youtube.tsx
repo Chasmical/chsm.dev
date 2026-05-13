@@ -14,7 +14,7 @@ export interface YouTubeEmbedProps {
 
 export default function YouTubeEmbed({ url: _url, data, className, ...props }: YouTubeEmbedProps) {
   const [embed, width, height] = useMemo(() => {
-    const embed = typeof data === "string" ? (JSON.parse(data) as oEmbedVideoResponse) : data;
+    const embed = typeof data === "string" ? (JSON.parse(data) as oEmbedVideoResponse) : { ...data };
 
     // Sometimes YouTube provides weird sizes here, so we'll adjust them for 16:9 ratio
     const width = embed.thumbnail_width ?? embed.width;

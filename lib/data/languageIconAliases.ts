@@ -58,9 +58,9 @@ type _Check<T extends ShikiBundledLanguage = ShikiLanguage> = T;
 type LanguageIconAliases = [shiki: ShikiLanguage | undefined, seti: SetiIcon, ...aliases: string[]];
 const languageIconAliases = languageIconAliasesConst as readonly Readonly<LanguageIconAliases>[];
 
-export function findShikiLanguage(name: string | undefined) {
-  if (name) return languageIconAliases.find(aliases => aliases.includes(name))?.[0] as ShikiLanguage | undefined;
+export function findShikiLanguage(name: string | undefined): ShikiLanguage | undefined {
+  if (name) return languageIconAliases.find(aliases => aliases.includes(name))?.[0];
 }
-export function findSetiIcon(name: string | undefined) {
-  if (name) return languageIconAliases.find(aliases => aliases.includes(name))?.[1] as SetiIcon | undefined;
+export function findSetiIcon(name: string | undefined): SetiIcon | undefined {
+  if (name) return languageIconAliases.find(aliases => aliases.includes(name))?.[1];
 }

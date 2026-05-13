@@ -17,8 +17,8 @@ export default function useEventThroughRef<Target extends HTMLElement, Type exte
 
   return target => {
     // Run the default ref logic
-    let defaultCleanup: void | (() => void);
-    ref && (typeof ref === "function" ? (defaultCleanup = ref(target)) : (ref.current = target));
+    let defaultCleanup: (() => void) | undefined;
+    ref && (typeof ref === "function" ? (defaultCleanup = void ref(target)) : (ref.current = target));
 
     function listener(this: Target, event: HTMLElementEventMap[Type]) {
       handlerRef.current.apply(this, [event]);

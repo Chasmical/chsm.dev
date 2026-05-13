@@ -54,7 +54,7 @@ export default function MainLayout({ children }: React.PropsWithChildren) {
   );
 }
 
-async function ClientProviders({ children }: React.PropsWithChildren) {
+function ClientProviders({ children }: React.PropsWithChildren) {
   return <SupabaseProvider>{children}</SupabaseProvider>;
 }
 

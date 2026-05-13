@@ -10,8 +10,10 @@ import { visit } from "unist-util-visit";
  * https://github.com/mdx-js/mdx/pull/2052#issuecomment-1140519087
  */
 export default function rehypeOverrideJsx(_options?: unknown): Transformer<Nodes> {
+  interface MaybeMdxNode {
+    data?: { _mdxExplicitJsx?: boolean };
+  }
   return tree => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    visit(tree, (node: any) => void delete node.data?._mdxExplicitJsx);
+    visit(tree, node => void delete (node as MaybeMdxNode).data?._mdxExplicitJsx);
   };
 }

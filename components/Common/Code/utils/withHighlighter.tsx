@@ -27,13 +27,13 @@ export default function withHighlighter(
    */
 
   // Use Shiki highlighting by default
-  const loader: LazyHighlighter = (typeof hl === "string" ? highlighters[hl] : hl) ?? highlighters.shiki;
+  const loader = ((typeof hl === "string" ? highlighters[hl] : hl) ?? highlighters.shiki) as LazyHighlighter;
 
   if (rsc) {
     return loader
       .import()
       .then(h => h.importLang(lang))
-      .then(loadedLang => Component(loader.current!, loadedLang));
+      .then(loadedLang => Component(loader.current, loadedLang));
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks

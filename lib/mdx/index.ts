@@ -69,10 +69,9 @@ export function compileMdx<FM>(markdown: VFileCompatible, config: MdxConfig) {
   return configureMdx(config).compile<FM>(markdown);
 }
 
-interface AsyncFunctionConstructor {
-  new <Args extends unknown[], Return>(...args: string[]): (...args: Args) => Promise<Return>;
-}
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor as AsyncFunctionConstructor;
+type AsyncFunctionCtor = new <Args extends unknown[], Return>(...args: string[]) => (...args: Args) => Promise<Return>;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor as AsyncFunctionCtor;
 
 function evaluateModule(source: string, scope?: Record<string, unknown> | null) {
   // Note: jsxRuntime needs to be accessible through arguments[0]

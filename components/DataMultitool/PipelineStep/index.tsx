@@ -36,6 +36,6 @@ const componentMap = {
   TextInput,
 };
 
-function TextInput({ step }: { step: PipelineStep }) {
+function TextInput({ step: _step }: { step: PipelineStep }) {
   return <></>;
 }

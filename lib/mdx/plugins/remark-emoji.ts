@@ -37,7 +37,7 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer<N
     // Replace emoji names with emojis
     findAndReplace(tree, [
       EmojiNameRegex,
-      (_, emojiName) => {
+      (_, emojiName: string) => {
         const twemoji = getEmoji(emojiName);
         if (twemoji) return twemoji;
 
@@ -85,7 +85,7 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer<N
 
 // Remove Variation Selector-16, if there is no Zero Width Joiner (???)
 function removeVS16s(emoji: string) {
-  return emoji.indexOf("\u200D") < 0 ? emoji.replaceAll("\uFE0F", "") : emoji;
+  return emoji.includes("\u200D") ? emoji : emoji.replaceAll("\uFE0F", "");
 }
 
 function findGemoji(emoji: string) {

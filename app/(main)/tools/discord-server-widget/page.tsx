@@ -18,7 +18,7 @@ export default function DiscordServerWidgetTool() {
     } else {
       setGuildId(id);
       const res = await fetch(`https://discord.com/api/guilds/${id}/widget.json`, { cache: "no-cache" });
-      setWidgetData(await res.json());
+      setWidgetData((await res.json()) as DiscordGuildWidget);
     }
   }, 1000);
 
@@ -53,6 +53,7 @@ export default function DiscordServerWidgetTool() {
                 width="400"
                 height="500"
                 allowtransparency="true"
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 frameBorder="0"
                 sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
               />

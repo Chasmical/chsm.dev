@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/method-signature-style */
 import lazy, { type Lazy } from "@lib/utils/lazy";
 import type { ShikiLanguage, ShikiToken } from "./shiki/core";
 import type { PrismLanguage, PrismToken } from "./prism/core";
@@ -7,9 +6,9 @@ import type { HljsLanguage, HljsToken } from "./hljs/core";
 export interface Highlighter<Lang extends string = string, Token = unknown> {
   name: string;
   highlighter: unknown;
-  importLang(lang: string | undefined): Promise<Lang | undefined>;
-  tokenize(code: string, lang: Lang): Token[][];
-  renderToken(token: Token, key: number): React.ReactNode;
+  importLang: (lang: string | undefined) => Promise<Lang | undefined>;
+  tokenize: (code: string, lang: Lang) => Token[][];
+  renderToken: (token: Token, key: number) => React.ReactNode;
 }
 
 export type LazyHighlighter<Lang extends string = string, Token = unknown> = Lazy<Highlighter<Lang, Token>>;

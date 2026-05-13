@@ -1,7 +1,7 @@
 import { CookieMethodsServer, createServerClient } from "@supabase/ssr";
-import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
+import { ProxyConfig, NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return await refreshSupabaseAuth(request);
 }
 
@@ -27,6 +27,6 @@ async function refreshSupabaseAuth(request: NextRequest) {
   return response;
 }
 
-export const config: MiddlewareConfig = {
+export const config: ProxyConfig = {
   matcher: ["/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
 };

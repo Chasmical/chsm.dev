@@ -7,7 +7,7 @@ import type { Database, Supabase } from "./types";
 export type { Database, Supabase };
 
 type ReadonlyRequestCookies = Awaited<ReturnType<typeof getCookies>>;
-type ClientOptions = SupabaseClientOptions<string & keyof Database> & { cookies: CookieMethodsServer };
+type ClientOptions = SupabaseClientOptions<keyof Database> & { cookies: CookieMethodsServer };
 
 function configureFetch(cookies: ReadonlyRequestCookies | null, next: NextFetchRequestConfig | undefined) {
   const options: ClientOptions = {
@@ -39,12 +39,12 @@ export function createServerSupabase(role?: "user" | "anonymous" | "SERVICE_ROLE
   switch (role || "user") {
     case "user":
       return getCookies().then(cookies => {
-        return createServerClient(url, anonKey, configureFetch(cookies, next)) as Supabase;
+        return createServerClient(url, anonKey, configureFetch(cookies, next));
       });
     case "anonymous":
-      return createServerClient(url, anonKey, configureFetch(null, next)) as Supabase;
+      return createServerClient(url, anonKey, configureFetch(null, next));
     case "SERVICE_ROLE":
-      return createSupabaseClient(url, serviceKey!, configureFetch(null, next)) as Supabase;
+      return createSupabaseClient(url, serviceKey!, configureFetch(null, next));
     default:
       throw new Error("createServerSupabase was called with invalid client type.");
   }

@@ -25,8 +25,7 @@ export default function remarkCustomDirectives(options?: RemarkCustomDirectivesO
   return tree => {
     const directiveTypes: DirectiveType[] = ["containerDirective", "leafDirective", "textDirective"];
 
-    visit(tree, directiveTypes, _anyNode => {
-      const node = _anyNode as Directives;
+    visit(tree, directiveTypes, node => {
       const typeShort = node.type.slice(0, -9) as DirectiveTypeShort;
 
       // Find a matching directive declaration

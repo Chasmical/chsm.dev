@@ -95,7 +95,7 @@ export default function extractDirectives(lines: string[]): DirectiveInfo[] {
       } else {
         // Otherwise, remove the line completely
         lines.splice(i--, 1);
-        if (decrementOnEmpty) directives[directives.length - 1]!.index--;
+        if (decrementOnEmpty) directives[directives.length - 1].index--;
       }
     }
   }

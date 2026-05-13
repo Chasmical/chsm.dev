@@ -27,6 +27,7 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "app/api/.private/**/*.ts",
     "eslint.config.js",
     ".prettierrc.mjs",
     "next-env.d.ts",

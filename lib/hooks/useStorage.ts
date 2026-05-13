@@ -72,7 +72,7 @@ export function createStorageSlot(storageArea: Storage | null, key: string | nul
       const oldValue = storageArea.getItem(key);
       if (typeof newValue === "function") newValue = newValue(oldValue);
       // If the value hasn't changed, do nothing
-      newValue = newValue == null ? null : "" + newValue;
+      newValue ??= null;
       if (newValue === oldValue) return;
 
       // If the value is null, remove it from storage; otherwise, set it

@@ -4,7 +4,7 @@ export default function useLatestCallback<T extends (...args: never) => unknown>
   const ref = useRef<T & { current: T }>(undefined);
   const latest = (ref.current ??= createRefCallback<T>());
   latest.current = func;
-  return latest as never;
+  return latest;
 }
 
 function createRefCallback<T extends (...args: never) => unknown>(): T & { current: T } {

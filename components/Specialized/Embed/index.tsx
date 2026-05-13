@@ -11,7 +11,10 @@ export interface EmbedProps {
 }
 
 export default function Embed({ url, data, ...props }: EmbedProps) {
-  const embed = useMemo<oEmbedResponse>(() => (typeof data === "string" ? JSON.parse(data) : data), [data]);
+  const embed = useMemo<oEmbedResponse>(
+    () => (typeof data === "string" ? (JSON.parse(data) as oEmbedResponse) : data),
+    [data],
+  );
 
   if (embed.provider_name === "YouTube" && embed.type === "video") {
     return <YouTubeEmbed url={url} data={embed} {...props} />;

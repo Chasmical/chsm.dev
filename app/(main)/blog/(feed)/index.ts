@@ -40,7 +40,7 @@ export async function generateFeed() {
     author,
   });
 
-  const tasks = posts.map(async post => {
+  for (const post of posts) {
     type Frontmatter = { title?: string; description?: string };
     const { frontmatter } = extractFrontmatter<Frontmatter>(post.content);
 
@@ -59,9 +59,7 @@ export async function generateFeed() {
       copyright,
       author: [author],
     });
-  });
-
-  await Promise.all(tasks);
+  }
 
   feed.items.sort((a, b) => +a.date - +b.date);
 

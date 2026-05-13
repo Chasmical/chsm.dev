@@ -13,11 +13,13 @@ const nextConfig: NextConfig = {
     },
   },
   webpack: config => {
+    /* eslint-disable */
     config.module.rules.push({ test: /\.mdx$/, use: "raw-loader" });
     return config;
+    /* eslint-enable */
   },
 
-  rewrites: async () => [{ source: "/", destination: "/about" }],
+  rewrites: () => [{ source: "/", destination: "/about" }],
 };
 
 export default nextConfig;

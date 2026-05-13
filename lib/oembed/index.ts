@@ -38,7 +38,7 @@ export function getOEmbed<X>(config: oEmbedInput<X>, url: string): oEmbedInfo<X>
       // Cache on server for 1 hour, and cache on client indefinitely
       typeof window === "undefined" ? { next: { revalidate: 3600 } } : { cache: "force-cache" },
     );
-    const data: oEmbedResponse = await res.json();
+    const data = (await res.json()) as oEmbedResponse;
 
     // Prevent spoofing through response's data
     data.provider_name = provider.provider_name;

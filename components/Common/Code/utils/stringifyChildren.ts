@@ -6,6 +6,7 @@ export default function stringifyChildren(children: React.ReactNode, results: st
     if (elem?.props?.children != null) {
       stringifyChildren(elem.props.children, results);
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       results.push(...("" + (child || "")).split(/\r?\n|\r/g));
     }
   });

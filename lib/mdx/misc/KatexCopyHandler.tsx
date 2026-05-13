@@ -39,7 +39,7 @@ export default function KatexCopyHandler(): React.ReactNode {
     // Preserve usual HTML copy/paste behavior.
     clipboardData.setData("text/html", htmlContents);
     // Rewrite plain-text version.
-    clipboardData.setData("text/plain", katexReplaceWithTex(fragment).textContent!);
+    clipboardData.setData("text/plain", katexReplaceWithTex(fragment).textContent);
     // Prevent normal copy handling.
     event.preventDefault();
   });
@@ -64,16 +64,14 @@ function katexReplaceWithTex(fragment: DocumentFragment): DocumentFragment {
   // Remove .katex-html blocks that are preceded by .katex-mathml blocks
   // (which will get replaced below).
   const katexHtml = fragment.querySelectorAll(".katex-mathml + .katex-html");
-  for (let i = 0; i < katexHtml.length; i++) {
-    const element = katexHtml[i];
+  for (const element of katexHtml) {
     if (element.remove) element.remove();
     else element.parentNode?.removeChild(element);
   }
   // Replace .katex-mathml elements with their annotation (TeX source)
   // descendant, with inline delimiters.
   const katexMathml = fragment.querySelectorAll(".katex-mathml");
-  for (let i = 0; i < katexMathml.length; i++) {
-    const element = katexMathml[i];
+  for (const element of katexMathml) {
     const texSource = element.querySelector("annotation");
     if (texSource) {
       if (element.replaceWith) element.replaceWith(texSource);
@@ -83,8 +81,7 @@ function katexReplaceWithTex(fragment: DocumentFragment): DocumentFragment {
   }
   // Switch display math to display delimiters.
   const displays = fragment.querySelectorAll(".katex-display annotation");
-  for (let i = 0; i < displays.length; i++) {
-    const element = displays[i];
+  for (const element of displays) {
     element.innerHTML =
       copyDelimiters.display[0] +
       element.innerHTML.substring(
