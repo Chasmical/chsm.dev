@@ -11,4 +11,4 @@ const prettierConfig = {
   endOfLine: "lf",
 };
 
-module.exports = prettierConfig;
+export default prettierConfig;
