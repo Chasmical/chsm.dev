@@ -58,7 +58,7 @@ export default defineConfig([
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        projectService: true,
+        // projectService: true,
       },
     },
   },
