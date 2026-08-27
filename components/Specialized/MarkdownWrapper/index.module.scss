@@ -14,5 +14,10 @@
     margin-bottom: var(--block-margin-bottom);
     &:last-child { margin-bottom: 0; }
   }
+  > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
   > :is(ul, ol) > li { line-height: 1.65em; }
 }

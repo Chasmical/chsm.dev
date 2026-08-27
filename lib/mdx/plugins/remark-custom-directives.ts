@@ -58,6 +58,6 @@ export default function remarkCustomDirectives(options?: RemarkCustomDirectivesO
 const defaultDirectives: CustomDirectiveInfo[] = [
   { type: "container", name: ["note", "tip", "info", "caution", "danger"], component: "Admonition", attrName: "type" },
   { type: "text", name: "icon", component: "Icon", attrValue: "type" },
-  { type: "text", name: "img", component: "img", attrValue: "src" },
+  { type: ["leaf", "text"], name: "img", component: "img", attrValue: "src" },
   { type: ["container", "leaf", "text"], name: "test", component: "div" },
 ];
