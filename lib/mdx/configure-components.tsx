@@ -32,7 +32,12 @@ function InlineCodeWrapper({ children, ...props }: InlineCodeProps) {
 
 function Image({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { src: string }) {
   let match = /_(\d+)x.[^\.]+$/.exec(src ?? "");
-  if (match) (props.style ??= {}).zoom = 1 / +match[1];
+  if (match) {
+    Object.assign((props.style ??= {}), {
+      zoom: 1 / +match[1],
+      marginBottom: `calc(var(--block-margin-bottom) * ${match[1]})`,
+    });
+  }
   return <img src={src} alt={alt} {...props} />;
 }
 
