@@ -6,7 +6,7 @@ import JSZip from "jszip";
 const getFontHash = unstable_cache(
   async () => {
     const url = `https://github.com/Chasmical/flag-emojis-for-windows/releases/latest/download/Segoe.UI.Emoji.with.Twemoji.Flags.zip`;
-    const res = await fetch(url, { next: { revalidate: 3600 } });
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`Segoe.UI.Emoji.with.Twemoji.Flags.zip (${res.status} ${res.statusText})`);
 
     const zip = await JSZip.loadAsync(await res.arrayBuffer());
