@@ -98,7 +98,7 @@ export const shikiTokenColors: ShikiTokenColor[] = [
   },
   { scope: "meta.template.expression", settings: { foreground: "#d4d4d4" } },
   {
-    scope: ["meta.jsx.children", "meta.paragraph"],
+    scope: ["meta.jsx.children", "meta.paragraph", "source.makefile", "source.shell"],
     settings: { foreground: "plainText" },
   },
   {
